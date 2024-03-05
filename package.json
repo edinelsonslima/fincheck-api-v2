@@ -1,0 +1,21 @@
+{
+  "name": "fincheck-api-v2",
+  "version": "1.0.0",
+  "author": "edinelsonslima <edinelsonlima86@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx watch --env-file=.env src/app/server.ts",
+    "build": "tsc",
+    "lint": "yarn eslint --fix && yarn prettier --write ."
+  },
+  "dependencies": {
+    "express": "^4.18.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.24",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3"
+  }
+}
