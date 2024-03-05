@@ -1,8 +1,8 @@
-import { Router } from 'express'
+import { Router } from 'express';
 
-const router = Router()
+const router = Router();
 
-router.post('/signin', (_, res) => res.send('signin'))
-router.post('/signup', (_, res) => res.send('signup'))
+router.post('/signin', (_, res) => res.send('signin'));
+router.post('/signup', (_, res) => res.send('signup'));
 
-export { router }
+export { router };

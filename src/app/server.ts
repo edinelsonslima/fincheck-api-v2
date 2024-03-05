@@ -1,7 +1,8 @@
-import express from "express";
+import express from 'express';
 
-import { env } from "./settings";
-import { router } from "routers";
+import { router } from 'routers';
+
+import { env } from './settings';
 
 const app = express();
 
