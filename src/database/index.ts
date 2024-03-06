@@ -4,6 +4,7 @@ import { ConnectionPool, config as IConfig } from 'mssql';
 import { env } from 'app/settings';
 
 const config: IConfig = {
+  requestTimeout: 600_000,
   user: env.DB_USER,
   password: env.DB_PASS,
   server: env.DB_SERVER,
@@ -20,11 +21,6 @@ const config: IConfig = {
   },
 };
 
-const db = new ConnectionPool({
-  ...config,
-  beforeConnect: (conn) => {
-    conn.on('connect', () => console.log('🔗 database connected'));
-  },
-});
+const db = new ConnectionPool(config);
 
 export { db };
