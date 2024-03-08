@@ -12,5 +12,6 @@
     "source.organizeImports": "always",
     "source.sortMembers": "always",
     "source.addMissingImports": "always"
-  }
+  },
+  "cSpell.words": ["signin"]
 }
