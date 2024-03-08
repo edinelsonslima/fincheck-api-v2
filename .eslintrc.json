@@ -54,5 +54,11 @@
         }
       }
     ]
-  }
+  },
+  "no-unused-expression": [
+    "error",
+    {
+      "allowTaggedTemplates": true
+    }
+  ]
 }
