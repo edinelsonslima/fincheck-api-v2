@@ -13,5 +13,5 @@
     "source.sortMembers": "always",
     "source.addMissingImports": "always"
   },
-  "cSpell.words": ["signin"]
+  "cSpell.words": ["DATETIME", "GETDATE", "NEWID", "recordset", "signin"]
 }
