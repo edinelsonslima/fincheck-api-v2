@@ -5,4 +5,10 @@ const signinBodySchema = z.object({
   password: z.string().min(8),
 });
 
-export { signinBodySchema };
+const signupBodySchema = z.object({
+  name: z.string().min(1),
+  email: z.string().min(1).email(),
+  password: z.string().min(8),
+});
+
+export { signinBodySchema, signupBodySchema };
