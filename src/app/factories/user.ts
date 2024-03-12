@@ -4,87 +4,60 @@ export interface IUser {
   id: string;
   name: string;
   email: string;
+  password: string;
+  created_at: Date;
+  updated_at: Date;
+
   categories: any[];
   bankAccounts: any[];
   transactions: any[];
 }
 
 class UserFactory {
-  private id: string;
-  private name: string;
-  private email: string;
-  private categories: any[];
-  private bankAccounts: any[];
-  private transactions: any[];
+  public toObject(queryResult: IResult<IUser>) {
+    const users = this.getUsers(queryResult);
 
-  constructor(private readonly user: IResult<IUser>) {
-    this.id = user.recordset[0].id;
-    this.name = user.recordset[0].name;
-    this.email = user.recordset[0].email;
-    this.categories = user.recordset[0].categories;
-    this.bankAccounts = user.recordset[0].bankAccounts;
-    this.transactions = user.recordset[0].transactions;
-  }
+    if (!users) {
+      return undefined;
+    }
 
-  public get Id() {
-    return this.id;
-  }
+    const [firstUser] = users;
 
-  public get Name() {
-    return this.name;
-  }
-
-  public get Email() {
-    return this.email;
-  }
-
-  public get Categories() {
-    return this.categories;
-  }
-
-  public get BankAccounts() {
-    return this.bankAccounts;
-  }
-
-  public get Transactions() {
-    return this.transactions;
-  }
-
-  public set Id(id: string) {
-    this.id = id;
-  }
-
-  public set Name(name: string) {
-    this.name = name;
-  }
-
-  public set Email(email: string) {
-    this.email = email;
-  }
-
-  public set Categories(categories: any[]) {
-    this.categories = categories;
-  }
-
-  public set BankAccounts(bankAccounts: any[]) {
-    this.bankAccounts = bankAccounts;
-  }
-
-  public set Transactions(transactions: any[]) {
-    this.transactions = transactions;
-  }
-
-  public toJSON() {
     return {
-      id: this.id,
-      name: this.name,
-      email: this.email,
-      categories: this.categories,
-      bankAccounts: this.bankAccounts,
-      transactions: this.transactions,
+      ...firstUser,
+    };
+  }
+
+  public toArray(queryResult: IResult<IUser>) {
+    const users = this.getUsers(queryResult);
+
+    if (!users) {
+      return undefined;
+    }
+
+    return {
+      ...users,
+    };
+  }
+
+  private getUsers(queryResult: IResult<IUser>) {
+    if (!queryResult.recordset?.length) {
+      return undefined;
+    }
+
+    return queryResult.recordset.map(this.format);
+  }
+
+  private format({ created_at, updated_at, ...user }: IUser) {
+    return {
+      ...user,
+      created_at: new Date(created_at),
+      updated_at: new Date(updated_at),
     };
   }
 }
 
-export type IUserFactory = typeof UserFactory;
-export { UserFactory };
+export type IUserFactory = InstanceType<typeof UserFactory>;
+
+const userFactory = new UserFactory();
+export { userFactory };
