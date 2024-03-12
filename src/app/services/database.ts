@@ -1,9 +1,13 @@
 import { ConnectionError, ConnectionPool } from 'mssql';
 
 import { env } from 'app/settings';
+import { ITables, tables } from 'database/tables';
 
 class DatabaseService {
-  constructor(private connection: ConnectionPool) {}
+  constructor(
+    private connection: ConnectionPool,
+    private readonly tables: ITables
+  ) {}
 
   public async initialize() {
     if (this.isInitialized) {
@@ -15,13 +19,26 @@ class DatabaseService {
     this.connection = pool;
   }
 
+  /**
+   * @doc https://www.npmjs.com/package/mssql#es6-tagged-template-literals
+   */
   public query<T>(query: TemplateStringsArray, ...inputs: any[]) {
     if (!this.isInitialized) {
       throw new ConnectionError('query failed, connection is not established');
     }
 
-    return this.connection.query<T>(query, inputs);
+    return this.connection.query<T>(query, ...inputs);
   }
+
+  public createTable = <T extends keyof ITables>(name: T) => {
+    const table = this.tables[name];
+
+    if (!table) {
+      throw new Error(`table ${name} does not exist`);
+    }
+
+    this.connection.query(table);
+  };
 
   private get isInitialized() {
     return this.connection.connected;
@@ -46,7 +63,7 @@ const connection = new ConnectionPool({
   },
 });
 
-const db = new DatabaseService(connection);
+const db = new DatabaseService(connection, tables);
 
 export type IDatabase = InstanceType<typeof DatabaseService>;
 export { db };
