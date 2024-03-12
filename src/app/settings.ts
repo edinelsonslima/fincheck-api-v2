@@ -13,6 +13,8 @@ const schema = z.object({
   DB_SERVER: z.string().min(1, 'is required'),
   DB_DATABASE: z.string().min(1, 'is required'),
   DB_PORT: z.string().transform((port) => Number(port) || 1433),
+
+  JWT_SECRET: z.string().min(1, 'is required'),
 });
 
 const result = schema.safeParse(environments);
