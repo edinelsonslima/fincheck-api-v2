@@ -1,4 +1,4 @@
-import { IUserRepository, userRepository } from 'app/repositories/users';
+import { IUserRepository, userRepository } from '@repositories/users';
 
 class UserService {
   constructor(private readonly userRepository: IUserRepository) {}

@@ -13,7 +13,7 @@
     "paths": {
       "@controllers/*": ["./app/controllers/*"],
       "@factories/*": ["./app/factories/*"],
-      "@models/*": ["./app/models/*"],
+      "@repositories/*": ["./app/repositories/*"],
       "@services/*": ["./app/services/*"],
       "@middlewares/*": ["./middlewares/*"],
       "@routers/*": ["./routers/*"],
