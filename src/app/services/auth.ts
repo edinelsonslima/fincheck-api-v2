@@ -64,5 +64,5 @@ class AuthService {
   }
 }
 
-export const authService = new AuthService(userModel);
 export type IAuthService = InstanceType<typeof AuthService>;
+export const authService = new AuthService(userModel);
