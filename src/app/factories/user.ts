@@ -7,10 +7,6 @@ export interface IUser {
   password: string;
   created_at: Date;
   updated_at: Date;
-
-  categories: any[];
-  bankAccounts: any[];
-  transactions: any[];
 }
 
 class UserFactory {
@@ -48,11 +44,11 @@ class UserFactory {
     return queryResult.recordset.map(this.format);
   }
 
-  private format({ created_at, updated_at, ...user }: IUser) {
+  private format(user: IUser) {
     return {
       ...user,
-      created_at: new Date(created_at),
-      updated_at: new Date(updated_at),
+      ...(user?.created_at && { created_at: new Date(user?.created_at) }),
+      ...(user?.updated_at && { updated_at: new Date(user?.updated_at) }),
     };
   }
 }
