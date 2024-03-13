@@ -1,4 +1,4 @@
-import { IUserRepository, userRepository } from '@repositories/users';
+import { IUserRepository, userRepository } from '@repositories/user';
 import { env } from 'app/settings';
 import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
