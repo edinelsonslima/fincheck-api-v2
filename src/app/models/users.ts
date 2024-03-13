@@ -35,7 +35,5 @@ class UserModel {
   }
 }
 
-const userModel = new UserModel(db, userFactory);
-
 export type IUserModel = InstanceType<typeof UserModel>;
-export { userModel };
+export const userModel = new UserModel(db, userFactory);

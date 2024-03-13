@@ -63,7 +63,5 @@ const connection = new ConnectionPool({
   },
 });
 
-const db = new DatabaseService(connection, tables);
-
 export type IDatabase = InstanceType<typeof DatabaseService>;
-export { db };
+export const db = new DatabaseService(connection, tables);

@@ -58,6 +58,4 @@ class UserFactory {
 }
 
 export type IUserFactory = InstanceType<typeof UserFactory>;
-
-const userFactory = new UserFactory();
-export { userFactory };
+export const userFactory = new UserFactory();

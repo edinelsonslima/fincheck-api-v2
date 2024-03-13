@@ -28,5 +28,4 @@ if (!result.success) {
   exit(1);
 }
 
-const env = result.data;
-export { env };
+export const env = result.data;
