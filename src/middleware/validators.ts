@@ -25,7 +25,28 @@ class validate {
     };
   }
 
-  public static jwt() {
+  public static param<T>(validator: ZodSchema<T>) {
+    return async (req: Request<T>, res: Response, next: NextFunction) => {
+      try {
+        const data = await validator.parseAsync(req.params);
+        req.params = data;
+
+        next();
+      } catch (err) {
+        if (!(err instanceof z.ZodError)) {
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.status(400).json({
+          message: err.errors.reduce((acc, err) => {
+            return { ...acc, [err.path.toString()]: err.message };
+          }, {}),
+        });
+      }
+    };
+  }
+
+  public static authorization() {
     return (req: Request, res: Response, next: NextFunction) => {
       try {
         const token = this.getAuthorizationToken(req);
