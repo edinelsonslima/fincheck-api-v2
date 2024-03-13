@@ -3,7 +3,7 @@ import { ConnectionError, ConnectionPool } from 'mssql';
 import { env } from 'app/settings';
 import { ITables, tables } from 'database/tables';
 
-class DatabaseService {
+class Database {
   constructor(
     private connection: ConnectionPool,
     private readonly tables: ITables
@@ -22,12 +22,20 @@ class DatabaseService {
   /**
    * @doc https://www.npmjs.com/package/mssql#es6-tagged-template-literals
    */
-  public query<T>(query: TemplateStringsArray, ...inputs: any[]) {
+  public async query<T>(query: TemplateStringsArray, ...inputs: any[]) {
     if (!this.isInitialized) {
       throw new ConnectionError('query failed, connection is not established');
     }
 
     return this.connection.query<T>(query, ...inputs);
+  }
+
+  public request() {
+    if (!this.isInitialized) {
+      throw new ConnectionError('query failed, connection is not established');
+    }
+
+    return this.connection.request();
   }
 
   public createTable = <T extends keyof ITables>(name: T) => {
@@ -63,5 +71,5 @@ const connection = new ConnectionPool({
   },
 });
 
-export type IDatabase = InstanceType<typeof DatabaseService>;
-export const db = new DatabaseService(connection, tables);
+export type IDatabase = InstanceType<typeof Database>;
+export const db = new Database(connection, tables);
