@@ -17,7 +17,7 @@ class validate {
         }
 
         res.status(400).json({
-          error: err.errors.reduce((acc, err) => {
+          message: err.errors.reduce((acc, err) => {
             return { ...acc, [err.path.toString()]: err.message };
           }, {}),
         });
@@ -44,7 +44,7 @@ class validate {
 
         next();
       } catch {
-        return res.status(401).json({ error: 'Unauthorized' });
+        return res.status(401).json({ message: 'Unauthorized' });
       }
     };
   }
