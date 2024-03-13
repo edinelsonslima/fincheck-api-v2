@@ -1,4 +1,4 @@
-import { db } from '@services/database';
+import { db } from 'database/database';
 
 db.initialize()
   .then(async () => await import('./app/server'))
