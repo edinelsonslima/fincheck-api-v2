@@ -8,7 +8,7 @@ class UserController {
 
   public async me(req: Request, res: Response) {
     try {
-      const { userId } = req.params;
+      const userId = req.userId;
 
       const user = await this.userService.getUserById(userId);
 

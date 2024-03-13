@@ -3,6 +3,11 @@ import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 import { ZodSchema, z } from 'zod';
 
+interface IAuthorizationPayload {
+  userId: string;
+  iat: number;
+  exp: number;
+}
 class validate {
   public static schema<T>(validator: ZodSchema<T>) {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -55,13 +60,13 @@ class validate {
           return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        const verified = verify(token, env.JWT_SECRET);
+        const payload = verify(token, env.JWT_SECRET) as IAuthorizationPayload;
 
-        if (!verified) {
+        if (!payload) {
           return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        req['userId'] = token;
+        req['userId'] = payload.userId;
 
         next();
       } catch {
