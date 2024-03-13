@@ -3,8 +3,15 @@ import { IUserRepository, userRepository } from '@repositories/users';
 class UserService {
   constructor(private readonly userRepository: IUserRepository) {}
 
-  public getUserById(userId: string) {
-    return this.userRepository.findOneById(userId);
+  public async getUserById(userId: string) {
+    const user = await this.userRepository.findOneById(userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const { email, name } = user;
+    return { email, name };
   }
 }
 
