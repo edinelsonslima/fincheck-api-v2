@@ -1,12 +1,12 @@
-import { IUserModel, userModel } from '@models/users';
+import { IUserRepository, userRepository } from 'app/repositories/users';
 
 class UserService {
-  constructor(private readonly userModel: IUserModel) {}
+  constructor(private readonly userRepository: IUserRepository) {}
 
   public getUserById(userId: string) {
-    return this.userModel.findOneById(userId);
+    return this.userRepository.findOneById(userId);
   }
 }
 
 export type IUserService = InstanceType<typeof UserService>;
-export const userService = new UserService(userModel);
+export const userService = new UserService(userRepository);

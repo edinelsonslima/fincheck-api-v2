@@ -1,4 +1,4 @@
-import { IUserModel, userModel } from '@models/users';
+import { IUserRepository, userRepository } from 'app/repositories/users';
 import { env } from 'app/settings';
 import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
@@ -15,10 +15,10 @@ interface IAuthSignup {
 }
 
 class AuthService {
-  constructor(private readonly userModel: IUserModel) {}
+  constructor(private readonly userRepository: IUserRepository) {}
 
   public async signin({ email, password }: IAuthSignin) {
-    const user = await this.userModel.findOneByEmail(email);
+    const user = await this.userRepository.findOneByEmail(email);
 
     if (!user) {
       throw new Error('Invalid credentials');
@@ -38,7 +38,7 @@ class AuthService {
   }
 
   public async signup({ email, name, password }: IAuthSignup) {
-    const userExists = await this.userModel.findOneByEmail(email);
+    const userExists = await this.userRepository.findOneByEmail(email);
 
     if (userExists) {
       throw new Error('This email is already in use');
@@ -46,7 +46,7 @@ class AuthService {
 
     const hashedPassword = await hash(password, 10);
 
-    const user = await this.userModel.create({
+    const user = await this.userRepository.create({
       name,
       email,
       password: hashedPassword,
@@ -65,4 +65,4 @@ class AuthService {
 }
 
 export type IAuthService = InstanceType<typeof AuthService>;
-export const authService = new AuthService(userModel);
+export const authService = new AuthService(userRepository);

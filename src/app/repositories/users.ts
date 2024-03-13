@@ -7,7 +7,7 @@ interface IUserCreate {
   password: string;
 }
 
-class UserModel {
+class UserRepository {
   constructor(
     private readonly db: IDatabase,
     private readonly factory: IUserFactory
@@ -44,5 +44,5 @@ class UserModel {
   }
 }
 
-export type IUserModel = InstanceType<typeof UserModel>;
-export const userModel = new UserModel(db, userFactory);
+export type IUserRepository = InstanceType<typeof UserRepository>;
+export const userRepository = new UserRepository(db, userFactory);
