@@ -1,5 +1,5 @@
-import { db, type IDatabase } from '@services/database';
 import { IUser, IUserFactory, userFactory } from 'app/factories/user';
+import { IDatabase, db } from 'database/database';
 
 interface IUserCreate {
   name: string;
@@ -13,6 +13,15 @@ class UserModel {
     private readonly factory: IUserFactory
   ) {
     this.db.createTable('users');
+  }
+
+  public async findOneById(userId: string) {
+    const result = await this.db.query<IUser>`
+      SELECT TOP 1 * FROM users
+      WHERE id = ${userId};
+    `;
+
+    return this.factory.toObject(result);
   }
 
   public async findOneByEmail(email: string) {
