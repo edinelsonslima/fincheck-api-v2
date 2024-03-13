@@ -17,7 +17,8 @@
       "@services/*": ["./app/services/*"],
       "@middlewares/*": ["./middlewares/*"],
       "@routers/*": ["./routers/*"],
-      "@types/*": ["./types/*"],
+      "@enums/*": ["./types/enums/*"],
+      "@interfaces/*": ["./types/interfaces/*"],
       "@validators/*": ["./validators/*"]
     }
   },
