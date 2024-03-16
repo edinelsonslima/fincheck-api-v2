@@ -9,7 +9,7 @@ interface IAuthorizationPayload {
   exp: number;
 }
 class validate {
-  public static schema<T>(validator: ZodSchema<T>) {
+  public static body<T>(validator: ZodSchema<T>) {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
         const data = await validator.parseAsync(req.body);

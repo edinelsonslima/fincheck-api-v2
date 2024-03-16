@@ -5,16 +5,8 @@ import { validate } from 'middleware/validators';
 
 const router = Router();
 
-router.post(
-  '/signin',
-  validate.schema(signinBodySchema),
-  authController.signin
-);
+router.post('/signin', validate.body(signinBodySchema), authController.signin);
 
-router.post(
-  '/signup',
-  validate.schema(signupBodySchema),
-  authController.signup
-);
+router.post('/signup', validate.body(signupBodySchema), authController.signup);
 
 export { router };
