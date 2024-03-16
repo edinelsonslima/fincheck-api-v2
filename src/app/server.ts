@@ -1,10 +1,12 @@
 /* eslint-disable no-console */
+import cors from 'cors';
 import express from 'express';
 import { router } from 'routers';
 import { env } from './settings';
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
