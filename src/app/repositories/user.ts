@@ -2,6 +2,7 @@ import { ISignupBodySchema } from '@interfaces/auth';
 import { IUser } from '@interfaces/user';
 import { IUserFactory, userFactory } from 'app/factories/user';
 import { IDatabase, db } from 'database';
+import { categories } from 'database/categories';
 
 interface ICreateUser extends ISignupBodySchema {}
 
@@ -36,7 +37,21 @@ class UserRepository {
       VALUES (${name} , ${email} , ${password});
     `;
 
-    return this.factory.toObject(result);
+    const user = this.factory.toObject(result);
+
+    if (!user) {
+      return undefined;
+    }
+
+    // default categories for new user
+    for (const category of categories) {
+      await this.db.query`
+        INSERT INTO categories (name, icon, type, user_id)
+        VALUES (${category.name}, ${category.icon}, ${category.type}, ${user.id});
+      `;
+    }
+
+    return user;
   }
 }
 
