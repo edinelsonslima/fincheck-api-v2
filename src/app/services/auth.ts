@@ -1,23 +1,13 @@
+import { ISigninBodySchema, ISignupBodySchema } from '@interfaces/auth';
 import { IUserRepository, userRepository } from '@repositories/user';
 import { env } from 'app/settings';
 import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 
-interface IAuthSignin {
-  email: string;
-  password: string;
-}
-
-interface IAuthSignup {
-  name: string;
-  email: string;
-  password: string;
-}
-
 class AuthService {
   constructor(private readonly userRepository: IUserRepository) {}
 
-  public async signin({ email, password }: IAuthSignin) {
+  public async signin({ email, password }: ISigninBodySchema) {
     const user = await this.userRepository.findOneByEmail(email);
 
     if (!user) {
@@ -37,7 +27,7 @@ class AuthService {
     return accessToken;
   }
 
-  public async signup({ email, name, password }: IAuthSignup) {
+  public async signup({ email, name, password }: ISignupBodySchema) {
     const userExists = await this.userRepository.findOneByEmail(email);
 
     if (userExists) {
