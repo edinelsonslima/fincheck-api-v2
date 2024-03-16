@@ -14,17 +14,18 @@ class BankAccountService {
 
     return bankAccounts?.map(({ transactions, ...bankAccount }) => ({
       ...bankAccount,
-      currentBalance: transactions.reduce((acc, transaction) => {
+      currentBalance: transactions?.reduce((acc, transaction) => {
+        console.log(acc, transaction?.value);
         if (transaction.type === enTransactionType.INCOME) {
-          acc + transaction.value;
+          acc + (transaction?.value ?? 0);
         }
 
         if (transaction.type === enTransactionType.EXPENSE) {
-          acc - transaction.value;
+          acc - (transaction?.value ?? 0);
         }
 
         return acc;
-      }, bankAccount.initialBalance),
+      }, bankAccount?.initialBalance ?? 0),
     }));
   }
 
