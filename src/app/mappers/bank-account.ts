@@ -1,9 +1,11 @@
 import { enBankAccountType } from '@enums/bank-account';
 import { enTransactionType } from '@enums/transaction';
 import {
+  IBankAccount,
   IBankAccountMapperDomain,
   IBankAccountMapperPersistence,
 } from '@interfaces/bank-account';
+import { ITransaction } from '@interfaces/transaction';
 import { IResult } from 'mssql';
 
 const BANK_ACCOUNT_VALUE = 0;
@@ -41,52 +43,59 @@ class BankAccountMapper {
       const bankIndex = acc.findIndex(({ id }) => bank.id === id);
 
       if (bankIndex === -1) {
-        const { transaction, ...restBank } = bank;
-        const transactions = transaction ? [transaction] : [];
-        acc.push({ ...restBank, transactions });
+        const { transaction, ...rest } = bank;
+        acc.push({ ...rest, transactions: transaction ? [transaction] : [] });
         return acc;
       }
 
-      if (bank.transaction?.bankAccountId === acc[bankIndex].id) {
+      if (bank?.transaction?.bankAccountId === acc[bankIndex].id) {
         const transaction = bank.transaction;
-        acc[bankIndex].transactions.push(transaction!);
+        acc[bankIndex].transactions.push(transaction);
       }
 
       return acc;
     }, [] as IBankAccountMapperDomain[]);
   }
 
-  private toDomain(bankAccount: IBankAccountMapperPersistence) {
-    const parsedTransaction = this.sanitizeObject({
-      id: bankAccount.id[TRANSACTION_VALUE],
-      value: Number(bankAccount.value),
-      date: new Date(bankAccount.date),
-      categoryId: bankAccount.category_id,
-      bankAccountId: bankAccount.bank_account_id,
-      createdAt: new Date(bankAccount.created_at[TRANSACTION_VALUE]),
-      updatedAt: new Date(bankAccount.updated_at[TRANSACTION_VALUE]),
-      name: bankAccount.name[TRANSACTION_VALUE],
-      type: bankAccount.type[TRANSACTION_VALUE] as enTransactionType,
-      userId: bankAccount.user_id[TRANSACTION_VALUE],
+  private toDomain(bank: IBankAccountMapperPersistence) {
+    const transaction = this.sanitizeObject<ITransaction>({
+      id: this.getValue(bank.id, TRANSACTION_VALUE),
+      value: this.getValue(bank.value, TRANSACTION_VALUE),
+      date: new Date(this.getValue(bank.date, TRANSACTION_VALUE)),
+      categoryId: this.getValue(bank.category_id, TRANSACTION_VALUE),
+      bankAccountId: this.getValue(bank.bank_account_id, TRANSACTION_VALUE),
+      createdAt: new Date(this.getValue(bank.created_at, TRANSACTION_VALUE)),
+      updatedAt: new Date(this.getValue(bank.updated_at, TRANSACTION_VALUE)),
+      name: this.getValue(bank.name, TRANSACTION_VALUE),
+      type: this.getValue(bank.type, TRANSACTION_VALUE) as enTransactionType,
+      userId: this.getValue(bank.user_id, TRANSACTION_VALUE),
     });
 
-    return this.sanitizeObject({
-      id: bankAccount.id[BANK_ACCOUNT_VALUE],
-      name: bankAccount.name[BANK_ACCOUNT_VALUE],
-      type: bankAccount.type[BANK_ACCOUNT_VALUE] as enBankAccountType,
-      userId: bankAccount.user_id[BANK_ACCOUNT_VALUE],
-      createdAt: new Date(bankAccount.created_at[BANK_ACCOUNT_VALUE]),
-      updatedAt: new Date(bankAccount.updated_at[BANK_ACCOUNT_VALUE]),
-      color: bankAccount.color,
-      initialBalance: bankAccount.initial_balance,
-      transaction: parsedTransaction,
+    const bankAccount = this.sanitizeObject<IBankAccount>({
+      id: this.getValue(bank.id, BANK_ACCOUNT_VALUE),
+      name: this.getValue(bank.name, BANK_ACCOUNT_VALUE),
+      type: this.getValue(bank.type, BANK_ACCOUNT_VALUE) as enBankAccountType,
+      userId: this.getValue(bank.user_id, BANK_ACCOUNT_VALUE),
+      createdAt: new Date(this.getValue(bank.created_at, BANK_ACCOUNT_VALUE)),
+      updatedAt: new Date(this.getValue(bank.updated_at, BANK_ACCOUNT_VALUE)),
+      color: this.getValue(bank.color, BANK_ACCOUNT_VALUE),
+      initialBalance: this.getValue(bank.initial_balance, BANK_ACCOUNT_VALUE),
     });
+
+    return {
+      ...bankAccount,
+      transaction: Array.isArray(bank.id) ? transaction : undefined,
+    };
+  }
+
+  private getValue<T>(value: T, type: number) {
+    return Array.isArray(value) ? value[type] : value;
   }
 
   private sanitizeObject<T extends object>(obj: T) {
     const invalid = [undefined, null, ''];
     const cleared = Object.entries(obj).filter(([, v]) => !invalid.includes(v));
-    return Object.fromEntries(cleared) as Partial<T>;
+    return Object.fromEntries(cleared) as T;
   }
 }
 
