@@ -30,6 +30,10 @@ router.put(
   bankAccountController.updateByUserIdAndBankAccountId
 );
 
-router.delete('/:bankAccountId', validate.param(bankAccountIdParamsSchema));
+router.delete(
+  '/:bankAccountId',
+  validate.param(bankAccountIdParamsSchema),
+  bankAccountController.deleteByUserIdAndBankAccountId
+);
 
 export { router };

@@ -12,6 +12,8 @@ class BankAccountController {
       this.findOneByUserIdAndBankAccountId.bind(this);
     this.updateByUserIdAndBankAccountId =
       this.updateByUserIdAndBankAccountId.bind(this);
+    this.deleteByUserIdAndBankAccountId =
+      this.deleteByUserIdAndBankAccountId.bind(this);
   }
 
   public async findAllByUserId(req: Request, res: Response) {
@@ -79,6 +81,23 @@ class BankAccountController {
         );
 
       return res.status(200).json(bankAccount);
+    } catch (error: any) {
+      const err: Error = error;
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  public async deleteByUserIdAndBankAccountId(req: Request, res: Response) {
+    try {
+      const userId = req.userId;
+      const bankAccountId = req.params.bankAccountId;
+
+      await this.bankAccountService.deleteByUserIdAndBankAccountId(
+        userId,
+        bankAccountId
+      );
+
+      return res.status(204).send();
     } catch (error: any) {
       const err: Error = error;
       res.status(500).json({ error: err.message });

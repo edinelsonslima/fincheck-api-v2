@@ -76,6 +76,21 @@ class BankAccountService {
 
     return bankAccount;
   }
+
+  public async deleteByUserIdAndBankAccountId(
+    userId: string,
+    bankAccountId: string
+  ) {
+    const bankAccount =
+      await this.bankAccountRepository.deleteByUserIdAndBankAccountId(
+        userId,
+        bankAccountId
+      );
+
+    if (!bankAccount) {
+      throw new Error('Bank account not found');
+    }
+  }
 }
 
 export type IBankAccountService = InstanceType<typeof BankAccountService>;

@@ -74,6 +74,22 @@ class BankAccountRepository {
 
     return this.factory.toObject(result);
   }
+
+  public async deleteByUserIdAndBankAccountId(
+    userId: string,
+    bankAccountId: string
+  ) {
+    const result = await this.db.query<IBankAccount>`
+      IF EXISTS (
+        SELECT 1 FROM bank_accounts
+        WHERE bank_accounts.user_id = ${userId} AND bank_accounts.id = ${bankAccountId}
+      )
+      DELETE FROM bank_accounts
+      WHERE bank_accounts.user_id = ${userId} AND bank_accounts.id = ${bankAccountId};
+    `;
+
+    return result.rowsAffected.length > 0;
+  }
 }
 
 export type IBankAccountRepository = InstanceType<typeof BankAccountRepository>;
