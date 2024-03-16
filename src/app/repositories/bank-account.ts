@@ -22,7 +22,7 @@ class BankAccountRepository {
   public async findAllByUserId(userId: string) {
     const result = await this.db.query<IBankAccount>`
       SELECT bank_accounts.*, transactions.type, transactions.name FROM bank_accounts
-      INNER JOIN transactions ON bank_accounts.id = transactions.bank_account_id
+      LEFT JOIN transactions ON bank_accounts.id = transactions.bank_account_id
       WHERE bank_accounts.user_id = ${userId};
     `;
 
