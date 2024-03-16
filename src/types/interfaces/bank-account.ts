@@ -19,22 +19,22 @@ export interface IBankAccount {
 }
 
 export interface IBankAccountMapperPersistence {
-  id: string[];
-  user_id: string[];
+  id: string[] | string;
+  user_id: string[] | string;
   initial_balance: number;
-  name: string[];
+  name: string[] | string;
   color: string;
-  type: string[];
-  created_at: string[];
-  updated_at: string[];
+  type: string[] | string;
+  created_at: string[] | string;
+  updated_at: string[] | string;
   category_id: string;
   bank_account_id: string;
-  value: string;
+  value: number[] | number;
   date: string;
 }
 
-export interface IBankAccountMapperDomain extends Partial<IBankAccount> {
-  transactions: Partial<ITransaction>[];
+export interface IBankAccountMapperDomain extends IBankAccount {
+  transactions: ITransaction[];
 }
 
 export type ICreateBankAccountBody = z.infer<
