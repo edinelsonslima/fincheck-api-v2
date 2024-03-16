@@ -80,7 +80,6 @@ class BankAccountController {
 
       return res.status(200).json(bankAccount);
     } catch (error: any) {
-      console.log(error);
       const err: Error = error;
       res.status(500).json({ error: err.message });
     }
