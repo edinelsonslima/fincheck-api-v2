@@ -40,6 +40,23 @@ class BankAccountService {
       userId,
     });
   }
+
+  public async findOneByUserIdAndBankAccountId(
+    userId: string,
+    bankAccountId: string
+  ) {
+    const bankAccount =
+      await this.bankAccountRepository.findOneByUserIdAndBankAccountId(
+        userId,
+        bankAccountId
+      );
+
+    if (!bankAccount) {
+      throw new Error('Bank account not found');
+    }
+
+    return bankAccount;
+  }
 }
 
 export type IBankAccountService = InstanceType<typeof BankAccountService>;

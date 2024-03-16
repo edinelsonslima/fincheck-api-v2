@@ -8,6 +8,8 @@ class BankAccountController {
   constructor(private readonly bankAccountService: IBankAccountService) {
     this.findAllByUserId = this.findAllByUserId.bind(this);
     this.create = this.create.bind(this);
+    this.findOneByUserIdAndBankAccountId =
+      this.findOneByUserIdAndBankAccountId.bind(this);
   }
 
   public async findAllByUserId(req: Request, res: Response) {
@@ -37,6 +39,24 @@ class BankAccountController {
       });
 
       return res.status(201).json(bankAccount);
+    } catch (error: any) {
+      const err: Error = error;
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  public async findOneByUserIdAndBankAccountId(req: Request, res: Response) {
+    try {
+      const userId = req.userId;
+      const bankAccountId = req.params.bankAccountId;
+
+      const bankAccount =
+        await this.bankAccountService.findOneByUserIdAndBankAccountId(
+          userId,
+          bankAccountId
+        );
+
+      return res.status(200).json(bankAccount);
     } catch (error: any) {
       const err: Error = error;
       res.status(500).json({ error: err.message });

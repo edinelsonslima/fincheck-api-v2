@@ -1,5 +1,8 @@
 import { bankAccountController } from '@controllers/bank-account';
-import { createBankAccountBodySchema } from '@validators/bank-account';
+import {
+  bankAccountIdParamsSchema,
+  createBankAccountBodySchema,
+} from '@validators/bank-account';
 import { Router } from 'express';
 import { validate } from 'middleware/validators';
 
@@ -13,7 +16,11 @@ router.post(
   bankAccountController.create
 );
 
-router.get('/:bankAccountId');
+router.get(
+  '/:bankAccountId',
+  validate.param(bankAccountIdParamsSchema),
+  bankAccountController.findOneByUserIdAndBankAccountId
+);
 
 router.put('/:bankAccountId');
 

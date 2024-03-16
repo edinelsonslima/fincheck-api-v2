@@ -12,4 +12,8 @@ const createBankAccountBodySchema = z.object({
   ]),
 });
 
-export { createBankAccountBodySchema };
+const bankAccountIdParamsSchema = z.object({
+  bankAccountId: z.string().uuid(),
+});
+
+export { bankAccountIdParamsSchema, createBankAccountBodySchema };

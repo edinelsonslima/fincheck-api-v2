@@ -40,6 +40,18 @@ class BankAccountRepository {
 
     return this.factory.toObject(result);
   }
+
+  public async findOneByUserIdAndBankAccountId(
+    userId: string,
+    bankAccountId: string
+  ) {
+    const result = await this.db.query<IBankAccount>`
+      SELECT TOP 1 * FROM bank_accounts
+      WHERE bank_accounts.user_id = ${userId} AND bank_accounts.id = ${bankAccountId};
+    `;
+
+    return this.factory.toObject(result);
+  }
 }
 
 export type IBankAccountRepository = InstanceType<typeof BankAccountRepository>;
