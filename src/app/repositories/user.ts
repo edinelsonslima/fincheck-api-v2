@@ -1,5 +1,5 @@
 import { ISignupBodySchema } from '@interfaces/auth';
-import { IUser } from '@interfaces/user';
+import { IUserMapperPersistence } from '@interfaces/user';
 import { IUserFactory, userFactory } from '@mappers/user';
 import { IDatabase, db } from 'database';
 import { categories } from 'database/categories';
@@ -13,8 +13,8 @@ class UserRepository {
   ) {}
 
   public async findOneById(userId: string) {
-    const result = await this.db.query<IUser>`
-      SELECT TOP 1 * FROM users
+    const result = await this.db.query<IUserMapperPersistence>`
+      SELECT TOP 1 name, email FROM users
       WHERE id = ${userId};
     `;
 
@@ -22,7 +22,7 @@ class UserRepository {
   }
 
   public async findOneByEmail(email: string) {
-    const result = await this.db.query<IUser>`
+    const result = await this.db.query<IUserMapperPersistence>`
       SELECT TOP 1 * FROM users
       WHERE email = ${email};
     `;
@@ -31,7 +31,7 @@ class UserRepository {
   }
 
   public async create({ email, name, password }: ICreateUser) {
-    const result = await this.db.query<IUser>`
+    const result = await this.db.query<IUserMapperPersistence>`
       INSERT INTO users (name, email, password)
       OUTPUT INSERTED.*
       VALUES (${name} , ${email} , ${password});

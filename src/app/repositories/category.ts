@@ -1,4 +1,4 @@
-import { ICategory } from '@interfaces/category';
+import { ICategoryMapperPersistence } from '@interfaces/category';
 import { ICategoryFactory, categoryFactory } from '@mappers/category';
 import { IDatabase, db } from 'database';
 
@@ -9,7 +9,7 @@ class CategoryRepository {
   ) {}
 
   public async findAllByUserId(userId: string) {
-    const result = await this.db.query<ICategory>`
+    const result = await this.db.query<ICategoryMapperPersistence>`
       SELECT * FROM categories
       WHERE user_id = ${userId}
     `;

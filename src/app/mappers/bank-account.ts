@@ -93,8 +93,9 @@ class BankAccountMapper {
   }
 
   private sanitizeObject<T extends object>(obj: T) {
-    const invalid = [undefined, null, ''];
-    const cleared = Object.entries(obj).filter(([, v]) => !invalid.includes(v));
+    const invalid = ['', 'undefined', 'null', 'Invalid Date', 'NaN'];
+    const entries = Object.entries(obj);
+    const cleared = entries.filter(([, v]) => !invalid.includes(String(v)));
     return Object.fromEntries(cleared) as T;
   }
 }

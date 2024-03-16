@@ -10,8 +10,7 @@ class UserService {
       throw new Error('User not found');
     }
 
-    const { email, name } = user;
-    return { email, name };
+    return user;
   }
 }
 

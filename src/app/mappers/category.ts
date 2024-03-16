@@ -6,6 +6,10 @@ import {
 import { IResult } from 'mssql';
 
 class CategoryFactory {
+  constructor() {
+    this.toDomain = this.toDomain.bind(this);
+  }
+
   public toObject(queryResult: IResult<ICategoryMapperPersistence>) {
     const categories = this.getCategories(queryResult);
 
@@ -28,11 +32,13 @@ class CategoryFactory {
       return undefined;
     }
 
-    return queryResult.recordset.map(this.format);
+    return queryResult.recordset.map(this.toDomain);
   }
 
-  private format(category: ICategoryMapperPersistence): ICategoryMapperDomain {
-    return {
+  private toDomain(
+    category: ICategoryMapperPersistence
+  ): ICategoryMapperDomain {
+    return this.sanitizeObject({
       id: category.id,
       userId: category.user_id,
       name: category.name,
@@ -40,7 +46,14 @@ class CategoryFactory {
       type: category.type as enTransactionType,
       createdAt: new Date(category.created_at),
       updatedAt: new Date(category.updated_at),
-    };
+    });
+  }
+
+  private sanitizeObject<T extends object>(obj: T) {
+    const invalid = ['', 'undefined', 'null', 'Invalid Date', 'NaN'];
+    const entries = Object.entries(obj);
+    const cleared = entries.filter(([, v]) => !invalid.includes(String(v)));
+    return Object.fromEntries(cleared) as T;
   }
 }
 

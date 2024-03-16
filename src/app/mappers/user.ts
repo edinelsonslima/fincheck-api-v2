@@ -1,8 +1,12 @@
-import { IUser } from '@interfaces/user';
+import { IUserMapperDomain, IUserMapperPersistence } from '@interfaces/user';
 import { IResult } from 'mssql';
 
 class UserFactory {
-  public toObject(queryResult: IResult<IUser>) {
+  constructor() {
+    this.toDomain = this.toDomain.bind(this);
+  }
+
+  public toObject(queryResult: IResult<IUserMapperPersistence>) {
     const users = this.getUsers(queryResult);
 
     if (!users) {
@@ -11,30 +15,38 @@ class UserFactory {
 
     const [firstUser] = users;
 
-    return {
-      ...firstUser,
-    };
+    return firstUser;
   }
 
-  public toArray(queryResult: IResult<IUser>) {
+  public toArray(queryResult: IResult<IUserMapperPersistence>) {
     const users = this.getUsers(queryResult);
     return users;
   }
 
-  private getUsers(queryResult: IResult<IUser>) {
+  private getUsers(queryResult: IResult<IUserMapperPersistence>) {
     if (!queryResult.recordset?.length) {
       return undefined;
     }
 
-    return queryResult.recordset.map(this.format);
+    return queryResult.recordset.map(this.toDomain);
   }
 
-  private format(user: IUser) {
-    return {
-      ...user,
-      ...(user?.created_at && { created_at: new Date(user?.created_at) }),
-      ...(user?.updated_at && { updated_at: new Date(user?.updated_at) }),
-    };
+  private toDomain(user: IUserMapperPersistence): IUserMapperDomain {
+    return this.sanitizeObject({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      createdAt: new Date(user.created_at),
+      updatedAt: new Date(user.updated_at),
+    });
+  }
+
+  private sanitizeObject<T extends object>(obj: T) {
+    const invalid = ['', 'undefined', 'null', 'Invalid Date', 'NaN'];
+    const entries = Object.entries(obj);
+    const cleared = entries.filter(([, v]) => !invalid.includes(String(v)));
+    return Object.fromEntries(cleared) as T;
   }
 }
 
