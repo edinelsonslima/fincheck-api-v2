@@ -5,7 +5,6 @@ import {
 } from '@validators/bank-account';
 import { z } from 'zod';
 import { ITransaction } from './transaction';
-import { IUser } from './user';
 
 export interface IBankAccount {
   id: string;
@@ -15,11 +14,27 @@ export interface IBankAccount {
   color: string;
   type: enBankAccountType;
 
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-  user: IUser;
-  transactions: ITransaction[];
+export interface IBankAccountMapperPersistence {
+  id: string[];
+  user_id: string[];
+  initial_balance: number;
+  name: string[];
+  color: string;
+  type: string[];
+  created_at: string[];
+  updated_at: string[];
+  category_id: string;
+  bank_account_id: string;
+  value: string;
+  date: string;
+}
+
+export interface IBankAccountMapperDomain extends Partial<IBankAccount> {
+  transactions: Partial<ITransaction>[];
 }
 
 export type ICreateBankAccountBody = z.infer<
