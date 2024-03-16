@@ -1,7 +1,7 @@
 import { ISignupBodySchema } from '@interfaces/auth';
 import { IUser } from '@interfaces/user';
 import { IUserFactory, userFactory } from 'app/factories/user';
-import { IDatabase, db } from 'database/database';
+import { IDatabase, db } from 'database';
 
 interface ICreateUser extends ISignupBodySchema {}
 

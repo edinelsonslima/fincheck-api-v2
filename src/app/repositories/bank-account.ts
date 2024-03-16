@@ -7,7 +7,7 @@ import {
   ICreateBankAccountBody,
   IUpdateBankAccountBody,
 } from '@interfaces/bank-account';
-import { IDatabase, db } from 'database/database';
+import { IDatabase, db } from 'database';
 
 interface ICreateBankAccount extends ICreateBankAccountBody {
   userId: string;
