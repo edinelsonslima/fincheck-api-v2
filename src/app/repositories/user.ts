@@ -1,4 +1,5 @@
-import { IUser, IUserFactory, userFactory } from 'app/factories/user';
+import { IUser } from '@interfaces/user';
+import { IUserFactory, userFactory } from 'app/factories/user';
 import { IDatabase, db } from 'database/database';
 
 interface IUserCreate {
@@ -11,9 +12,7 @@ class UserRepository {
   constructor(
     private readonly db: IDatabase,
     private readonly factory: IUserFactory
-  ) {
-    this.db.createTable('users');
-  }
+  ) {}
 
   public async findOneById(userId: string) {
     const result = await this.db.query<IUser>`
