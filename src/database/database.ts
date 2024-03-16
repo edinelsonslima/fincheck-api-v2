@@ -1,13 +1,10 @@
 import { ConnectionError, ConnectionPool } from 'mssql';
 
 import { env } from 'app/settings';
-import { ITables, tables } from 'database/tables';
+import { tables } from './tables';
 
 class Database {
-  constructor(
-    private connection: ConnectionPool,
-    private readonly tables: ITables
-  ) {}
+  constructor(private connection: ConnectionPool) {}
 
   public async initialize() {
     if (this.isInitialized) {
@@ -17,6 +14,7 @@ class Database {
 
     const pool = await this.connection.connect();
     this.connection = pool;
+    pool.query(tables.join('\n'));
   }
 
   /**
@@ -29,24 +27,6 @@ class Database {
 
     return this.connection.query<T>(query, ...inputs);
   }
-
-  public request() {
-    if (!this.isInitialized) {
-      throw new ConnectionError('query failed, connection is not established');
-    }
-
-    return this.connection.request();
-  }
-
-  public createTable = <T extends keyof ITables>(name: T) => {
-    const table = this.tables[name];
-
-    if (!table) {
-      throw new Error(`table ${name} does not exist`);
-    }
-
-    this.connection.query(table);
-  };
 
   private get isInitialized() {
     return this.connection.connected;
@@ -72,4 +52,4 @@ const connection = new ConnectionPool({
 });
 
 export type IDatabase = InstanceType<typeof Database>;
-export const db = new Database(connection, tables);
+export const db = new Database(connection);
