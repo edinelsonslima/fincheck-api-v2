@@ -10,6 +10,8 @@ class BankAccountController {
     this.create = this.create.bind(this);
     this.findOneByUserIdAndBankAccountId =
       this.findOneByUserIdAndBankAccountId.bind(this);
+    this.updateByUserIdAndBankAccountId =
+      this.updateByUserIdAndBankAccountId.bind(this);
   }
 
   public async findAllByUserId(req: Request, res: Response) {
@@ -58,6 +60,27 @@ class BankAccountController {
 
       return res.status(200).json(bankAccount);
     } catch (error: any) {
+      const err: Error = error;
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  public async updateByUserIdAndBankAccountId(req: Request, res: Response) {
+    try {
+      const userId = req.userId;
+      const { bankAccountId } = req.params;
+      const { color, initialBalance, name, type } = req.body;
+
+      const bankAccount =
+        await this.bankAccountService.updateByUserIdAndBankAccountId(
+          userId,
+          bankAccountId,
+          { color, initialBalance, name, type }
+        );
+
+      return res.status(200).json(bankAccount);
+    } catch (error: any) {
+      console.log(error);
       const err: Error = error;
       res.status(500).json({ error: err.message });
     }

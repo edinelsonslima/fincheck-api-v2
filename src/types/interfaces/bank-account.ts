@@ -1,5 +1,8 @@
 import { enBankAccountType } from '@enums/bank-account';
-import { createBankAccountBodySchema } from '@validators/bank-account';
+import {
+  createBankAccountBodySchema,
+  updateBankAccountBodySchema,
+} from '@validators/bank-account';
 import { z } from 'zod';
 import { ITransaction } from './transaction';
 import { IUser } from './user';
@@ -21,4 +24,8 @@ export interface IBankAccount {
 
 export type ICreateBankAccountBody = z.infer<
   typeof createBankAccountBodySchema
+>;
+
+export type IUpdateBankAccountBody = z.infer<
+  typeof updateBankAccountBodySchema
 >;

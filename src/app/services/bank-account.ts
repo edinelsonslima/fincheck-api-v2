@@ -57,6 +57,25 @@ class BankAccountService {
 
     return bankAccount;
   }
+
+  public async updateByUserIdAndBankAccountId(
+    userId: string,
+    bankAccountId: string,
+    { color, initialBalance, name, type }: ICreateBankAccountBody
+  ) {
+    const bankAccount =
+      await this.bankAccountRepository.updateByUserIdAndBankAccountId(
+        userId,
+        bankAccountId,
+        { color, initialBalance, name, type }
+      );
+
+    if (!bankAccount) {
+      throw new Error('Bank account not found');
+    }
+
+    return bankAccount;
+  }
 }
 
 export type IBankAccountService = InstanceType<typeof BankAccountService>;

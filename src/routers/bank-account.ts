@@ -2,6 +2,7 @@ import { bankAccountController } from '@controllers/bank-account';
 import {
   bankAccountIdParamsSchema,
   createBankAccountBodySchema,
+  updateBankAccountBodySchema,
 } from '@validators/bank-account';
 import { Router } from 'express';
 import { validate } from 'middleware/validators';
@@ -22,8 +23,13 @@ router.get(
   bankAccountController.findOneByUserIdAndBankAccountId
 );
 
-router.put('/:bankAccountId');
+router.put(
+  '/:bankAccountId',
+  validate.param(bankAccountIdParamsSchema),
+  validate.body(updateBankAccountBodySchema),
+  bankAccountController.updateByUserIdAndBankAccountId
+);
 
-router.delete('/:bankAccountId');
+router.delete('/:bankAccountId', validate.param(bankAccountIdParamsSchema));
 
 export { router };

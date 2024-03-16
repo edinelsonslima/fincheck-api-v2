@@ -12,8 +12,25 @@ const createBankAccountBodySchema = z.object({
   ]),
 });
 
+const updateBankAccountBodySchema = z.object({
+  name: z.string().min(1).optional(),
+  color: z.string().min(4).max(9).regex(/^#/).optional(),
+  initialBalance: z.number().min(0).optional(),
+  type: z
+    .enum([
+      enBankAccountType.CASH,
+      enBankAccountType.CHECKING,
+      enBankAccountType.INVESTMENT,
+    ])
+    .optional(),
+});
+
 const bankAccountIdParamsSchema = z.object({
   bankAccountId: z.string().uuid(),
 });
 
-export { bankAccountIdParamsSchema, createBankAccountBodySchema };
+export {
+  bankAccountIdParamsSchema,
+  createBankAccountBodySchema,
+  updateBankAccountBodySchema,
+};

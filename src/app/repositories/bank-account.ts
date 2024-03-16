@@ -2,7 +2,11 @@ import {
   IBankAccountFactory,
   bankAccountFactory,
 } from '@factories/bank-account';
-import { IBankAccount, ICreateBankAccountBody } from '@interfaces/bank-account';
+import {
+  IBankAccount,
+  ICreateBankAccountBody,
+  IUpdateBankAccountBody,
+} from '@interfaces/bank-account';
 import { IDatabase, db } from 'database/database';
 
 interface ICreateBankAccount extends ICreateBankAccountBody {
@@ -47,6 +51,24 @@ class BankAccountRepository {
   ) {
     const result = await this.db.query<IBankAccount>`
       SELECT TOP 1 * FROM bank_accounts
+      WHERE bank_accounts.user_id = ${userId} AND bank_accounts.id = ${bankAccountId};
+    `;
+
+    return this.factory.toObject(result);
+  }
+
+  public async updateByUserIdAndBankAccountId(
+    userId: string,
+    bankAccountId: string,
+    { color, initialBalance, name, type }: IUpdateBankAccountBody
+  ) {
+    const result = await this.db.query<IBankAccount>`
+      UPDATE bank_accounts
+      SET name = ISNULL(${name ?? null}, name),
+          initial_balance = ISNULL(${initialBalance ?? null}, initial_balance),
+          color = ISNULL(${color ?? null}, color),
+          type = COALESCE(${type ?? null}, type)
+      OUTPUT INSERTED.*
       WHERE bank_accounts.user_id = ${userId} AND bank_accounts.id = ${bankAccountId};
     `;
 
