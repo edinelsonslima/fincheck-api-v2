@@ -16,6 +16,7 @@
   "cSpell.words": [
     "DATETIME",
     "GETDATE",
+    "ISNULL",
     "NEWID",
     "NVARCHAR",
     "recordset",
