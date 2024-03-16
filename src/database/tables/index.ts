@@ -65,13 +65,10 @@ CREATE TABLE transactions (
     updated_at        DATETIME          NOT NULL  DEFAULT GETDATE(),
 
     CONSTRAINT PK_transactions PRIMARY KEY (id),
-    CONSTRAINT FK_transactions_users FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT FK_transactions_users FOREIGN KEY (user_id) REFERENCES users(id),
     CONSTRAINT FK_transactions_bank_accounts FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id) ON DELETE CASCADE,
     CONSTRAINT FK_transactions_categories FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
 `;
 
-const tables = { users, bankAccounts, categories, transactions };
-
-export type ITables = typeof tables;
-export { tables };
+export const tables = [users, bankAccounts, categories, transactions];
