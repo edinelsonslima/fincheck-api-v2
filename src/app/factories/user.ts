@@ -1,13 +1,5 @@
+import { IUser } from '@interfaces/user';
 import { IResult } from 'mssql';
-
-export interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  created_at: Date;
-  updated_at: Date;
-}
 
 class UserFactory {
   public toObject(queryResult: IResult<IUser>) {
@@ -26,14 +18,7 @@ class UserFactory {
 
   public toArray(queryResult: IResult<IUser>) {
     const users = this.getUsers(queryResult);
-
-    if (!users) {
-      return undefined;
-    }
-
-    return {
-      ...users,
-    };
+    return users;
   }
 
   private getUsers(queryResult: IResult<IUser>) {
