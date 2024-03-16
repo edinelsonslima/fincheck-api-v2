@@ -1,8 +1,12 @@
-import { ICategory } from '@interfaces/category';
+import { enTransactionType } from '@enums/transaction';
+import {
+  ICategoryMapperDomain,
+  ICategoryMapperPersistence,
+} from '@interfaces/category';
 import { IResult } from 'mssql';
 
 class CategoryFactory {
-  public toObject(queryResult: IResult<ICategory>) {
+  public toObject(queryResult: IResult<ICategoryMapperPersistence>) {
     const categories = this.getCategories(queryResult);
 
     if (!categories) {
@@ -11,17 +15,15 @@ class CategoryFactory {
 
     const [firstCategory] = categories;
 
-    return {
-      ...firstCategory,
-    };
+    return firstCategory;
   }
 
-  public toArray(queryResult: IResult<ICategory>) {
+  public toArray(queryResult: IResult<ICategoryMapperPersistence>) {
     const categories = this.getCategories(queryResult);
     return categories;
   }
 
-  private getCategories(queryResult: IResult<ICategory>) {
+  private getCategories(queryResult: IResult<ICategoryMapperPersistence>) {
     if (!queryResult.recordset?.length) {
       return undefined;
     }
@@ -29,15 +31,15 @@ class CategoryFactory {
     return queryResult.recordset.map(this.format);
   }
 
-  private format(category: ICategory) {
+  private format(category: ICategoryMapperPersistence): ICategoryMapperDomain {
     return {
-      ...category,
-      ...(category?.created_at && {
-        created_at: new Date(category?.created_at),
-      }),
-      ...(category?.updated_at && {
-        updated_at: new Date(category?.updated_at),
-      }),
+      id: category.id,
+      userId: category.user_id,
+      name: category.name,
+      icon: category.icon,
+      type: category.type as enTransactionType,
+      createdAt: new Date(category.created_at),
+      updatedAt: new Date(category.updated_at),
     };
   }
 }
