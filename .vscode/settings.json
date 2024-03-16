@@ -13,5 +13,13 @@
     "source.sortMembers": "always",
     "source.addMissingImports": "always"
   },
-  "cSpell.words": ["DATETIME", "GETDATE", "NEWID", "recordset", "signin"]
+  "cSpell.words": [
+    "DATETIME",
+    "GETDATE",
+    "NEWID",
+    "NVARCHAR",
+    "recordset",
+    "signin",
+    "UNIQUEIDENTIFIER"
+  ]
 }
