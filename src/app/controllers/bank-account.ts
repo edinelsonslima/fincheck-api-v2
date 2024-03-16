@@ -7,15 +7,36 @@ import { Request, Response } from 'express';
 class BankAccountController {
   constructor(private readonly bankAccountService: IBankAccountService) {
     this.findAllByUserId = this.findAllByUserId.bind(this);
+    this.create = this.create.bind(this);
   }
 
-  public findAllByUserId(req: Request, res: Response) {
+  public async findAllByUserId(req: Request, res: Response) {
     try {
       const userId = req.userId;
 
-      const bankAccounts = this.bankAccountService.findAllByUserId(userId);
+      const bankAccounts =
+        await this.bankAccountService.findAllByUserId(userId);
 
       return res.status(200).json(bankAccounts);
+    } catch (error: any) {
+      const err: Error = error;
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  public async create(req: Request, res: Response) {
+    try {
+      const userId = req.userId;
+      const { color, initialBalance, name, type } = req.body;
+
+      const bankAccount = await this.bankAccountService.create(userId, {
+        color,
+        initialBalance,
+        name,
+        type,
+      });
+
+      return res.status(201).json(bankAccount);
     } catch (error: any) {
       const err: Error = error;
       res.status(500).json({ error: err.message });

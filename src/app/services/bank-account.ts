@@ -1,4 +1,5 @@
 import { enTransactionType } from '@enums/transaction';
+import { ICreateBankAccountBody } from '@interfaces/bank-account';
 import {
   IBankAccountRepository,
   bankAccountRepository,
@@ -25,6 +26,19 @@ class BankAccountService {
         return acc;
       }, bankAccount.initialBalance),
     }));
+  }
+
+  public create(
+    userId: string,
+    { color, initialBalance, name, type }: ICreateBankAccountBody
+  ) {
+    return this.bankAccountRepository.create({
+      color,
+      initialBalance,
+      name,
+      type,
+      userId,
+    });
   }
 }
 
