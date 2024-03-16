@@ -12,7 +12,7 @@
     "skipLibCheck": true,
     "paths": {
       "@controllers/*": ["./app/controllers/*"],
-      "@factories/*": ["./app/factories/*"],
+      "@mappers/*": ["./app/mappers/*"],
       "@repositories/*": ["./app/repositories/*"],
       "@services/*": ["./app/services/*"],
       "@middlewares/*": ["./middlewares/*"],

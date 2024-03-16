@@ -1,5 +1,5 @@
-import { ICategoryFactory, categoryFactory } from '@factories/category';
 import { ICategory } from '@interfaces/category';
+import { ICategoryFactory, categoryFactory } from '@mappers/category';
 import { IDatabase, db } from 'database';
 
 class CategoryRepository {

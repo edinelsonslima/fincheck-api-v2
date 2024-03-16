@@ -1,6 +1,6 @@
 import { ISignupBodySchema } from '@interfaces/auth';
 import { IUser } from '@interfaces/user';
-import { IUserFactory, userFactory } from 'app/factories/user';
+import { IUserFactory, userFactory } from '@mappers/user';
 import { IDatabase, db } from 'database';
 import { categories } from 'database/categories';
 
