@@ -3,12 +3,13 @@ import {
   ICreateBankAccountBody,
   IUpdateBankAccountBody,
 } from '@interfaces/bank-account';
+import { ITransactionMapperPersistence } from '@interfaces/transaction';
 import { IBankAccountMapper, bankAccountMapper } from '@mappers/bank-account';
 import { IDatabase, db } from 'database';
 
-interface ICreateBankAccount extends ICreateBankAccountBody {
-  userId: string;
-}
+export interface IBankAccountJoinTransactions
+  extends IBankAccountMapperPersistence,
+    ITransactionMapperPersistence {}
 
 class BankAccountRepository {
   constructor(
@@ -17,7 +18,7 @@ class BankAccountRepository {
   ) {}
 
   public async findAllByUserId(userId: string) {
-    const result = await this.db.query<IBankAccountMapperPersistence>`
+    const result = await this.db.query<IBankAccountJoinTransactions>`
       SELECT * FROM bank_accounts
       LEFT JOIN transactions ON bank_accounts.id = transactions.bank_account_id
       WHERE bank_accounts.user_id = ${userId};
@@ -26,13 +27,10 @@ class BankAccountRepository {
     return this.mapper.toArray(result);
   }
 
-  public async create({
-    color,
-    initialBalance,
-    name,
-    type,
-    userId,
-  }: ICreateBankAccount) {
+  public async create(
+    userId: string,
+    { color, initialBalance, name, type }: ICreateBankAccountBody
+  ) {
     const result = await this.db.query<IBankAccountMapperPersistence>`
       INSERT INTO bank_accounts (name, initial_balance, type, color, user_id)
       OUTPUT INSERTED.*
