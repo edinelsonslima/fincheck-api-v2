@@ -1,4 +1,4 @@
-export enum enStatusCodes {
+export enum enStatusCode {
   // information responses
   CONTINUE = 100,
   SWITCHING_PROTOCOLS = 101,
