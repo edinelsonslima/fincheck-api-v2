@@ -8,38 +8,11 @@ interface ISchemaKeys {
   category: Array<keyof ICategoryMapperPersistence>;
 }
 
+// prettier-ignore
 const schemaKeys: ISchemaKeys = {
-  transaction: [
-    'id',
-    'user_id',
-    'category_id',
-    'bank_account_id',
-    'name',
-    'value',
-    'date',
-    'type',
-    'created_at',
-    'updated_at',
-  ],
-  bankAccount: [
-    'id',
-    'user_id',
-    'initial_balance',
-    'name',
-    'color',
-    'type',
-    'created_at',
-    'updated_at',
-  ],
-  category: [
-    'id',
-    'user_id',
-    'name',
-    'icon',
-    'type',
-    'created_at',
-    'updated_at',
-  ],
+  transaction: ['id', 'user_id', 'category_id', 'bank_account_id', 'name', 'value', 'date', 'type', 'created_at', 'updated_at'],
+  bankAccount: ['id', 'user_id', 'initial_balance', 'name', 'color', 'type', 'created_at', 'updated_at'],
+  category: ['id', 'user_id', 'name', 'icon', 'type', 'created_at', 'updated_at'],
 };
 
 export function separateJoins<T extends object>(
