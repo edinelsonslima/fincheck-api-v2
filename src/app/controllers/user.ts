@@ -4,10 +4,10 @@ import { IUserService, userService } from '@services/user';
 
 class UserController {
   constructor(private readonly userService: IUserService) {
-    this.me = this.me.bind(this);
+    this.show = this.show.bind(this);
   }
 
-  public async me(req: IRequest, res: IResponse<IUser>) {
+  public async show(req: IRequest, res: IResponse<IUser>) {
     try {
       const user = await this.userService.getUserById(req.userId);
 

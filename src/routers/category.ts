@@ -3,6 +3,6 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.get('/', categoryController.findAllByUserId);
+router.get('/', categoryController.index);
 
 export { router };

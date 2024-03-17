@@ -13,13 +13,13 @@ const router = Router();
 router.get(
   '/',
   validate.query(findTransactionsQuerySchema),
-  transactionController.findAllByUserId
+  transactionController.index
 );
 
 router.post(
   '/',
   validate.body(createTransactionBodySchema),
-  transactionController.create
+  transactionController.store
 );
 
 router.put(

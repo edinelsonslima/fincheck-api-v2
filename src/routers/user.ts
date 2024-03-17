@@ -3,6 +3,6 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.get('/me', userController.me);
+router.get('/me', userController.show);
 
 export { router };

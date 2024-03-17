@@ -10,13 +10,13 @@ import { ITransactionService, transactionService } from '@services/transaction';
 
 class TransactionController {
   constructor(private readonly transactionService: ITransactionService) {
-    this.findAllByUserId = this.findAllByUserId.bind(this);
-    this.create = this.create.bind(this);
+    this.index = this.index.bind(this);
+    this.store = this.store.bind(this);
     this.update = this.update.bind(this);
     this.delete = this.delete.bind(this);
   }
 
-  public async findAllByUserId(
+  public async index(
     req: IRequest<unknown, unknown, IFindTransactionsQuery>,
     res: IResponse<ITransaction[]>
   ) {
@@ -33,7 +33,7 @@ class TransactionController {
     }
   }
 
-  public async create(
+  public async store(
     req: IRequest<ICreateTransactionBody>,
     res: IResponse<ITransaction>
   ) {

@@ -9,31 +9,31 @@ import { validate } from 'middleware/validators';
 
 const router = Router();
 
-router.get('/', bankAccountController.findAllByUserId);
-
-router.post(
-  '/',
-  validate.body(createBankAccountBodySchema),
-  bankAccountController.create
-);
+router.get('/', bankAccountController.index);
 
 router.get(
   '/:bankAccountId',
   validate.param(bankAccountIdParamsSchema),
-  bankAccountController.findOneByUserIdAndBankAccountId
+  bankAccountController.show
+);
+
+router.post(
+  '/',
+  validate.body(createBankAccountBodySchema),
+  bankAccountController.store
 );
 
 router.put(
   '/:bankAccountId',
   validate.param(bankAccountIdParamsSchema),
   validate.body(updateBankAccountBodySchema),
-  bankAccountController.updateByUserIdAndBankAccountId
+  bankAccountController.update
 );
 
 router.delete(
   '/:bankAccountId',
   validate.param(bankAccountIdParamsSchema),
-  bankAccountController.deleteByUserIdAndBankAccountId
+  bankAccountController.delete
 );
 
 export { router };

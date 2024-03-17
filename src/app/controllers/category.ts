@@ -4,10 +4,10 @@ import { ICategoryService, categoryService } from '@services/category';
 
 class CategoryController {
   constructor(private readonly categoryService: ICategoryService) {
-    this.findAllByUserId = this.findAllByUserId.bind(this);
+    this.index = this.index.bind(this);
   }
 
-  public async findAllByUserId(req: IRequest, res: IResponse<ICategory[]>) {
+  public async index(req: IRequest, res: IResponse<ICategory[]>) {
     try {
       const categories = await this.categoryService.findAllByUserId(req.userId);
 

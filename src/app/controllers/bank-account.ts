@@ -12,17 +12,14 @@ import {
 
 class BankAccountController {
   constructor(private readonly bankAccountService: IBankAccountService) {
-    this.findAllByUserId = this.findAllByUserId.bind(this);
-    this.create = this.create.bind(this);
-    this.findOneByUserIdAndBankAccountId =
-      this.findOneByUserIdAndBankAccountId.bind(this);
-    this.updateByUserIdAndBankAccountId =
-      this.updateByUserIdAndBankAccountId.bind(this);
-    this.deleteByUserIdAndBankAccountId =
-      this.deleteByUserIdAndBankAccountId.bind(this);
+    this.index = this.index.bind(this);
+    this.store = this.store.bind(this);
+    this.show = this.show.bind(this);
+    this.update = this.update.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
-  public async findAllByUserId(req: IRequest, res: IResponse<IBankAccount[]>) {
+  public async index(req: IRequest, res: IResponse<IBankAccount[]>) {
     try {
       const bankAccounts = await this.bankAccountService.findAllByUserId(
         req.userId
@@ -35,7 +32,7 @@ class BankAccountController {
     }
   }
 
-  public async create(
+  public async store(
     req: IRequest<ICreateBankAccountBody>,
     res: IResponse<IBankAccount>
   ) {
@@ -52,7 +49,7 @@ class BankAccountController {
     }
   }
 
-  public async findOneByUserIdAndBankAccountId(
+  public async show(
     req: IRequest<unknown, IBankAccountIdParams>,
     res: IResponse<IBankAccount>
   ) {
@@ -70,7 +67,7 @@ class BankAccountController {
     }
   }
 
-  public async updateByUserIdAndBankAccountId(
+  public async update(
     req: IRequest<IUpdateBankAccountBody, IBankAccountIdParams>,
     res: IResponse<IBankAccount>
   ) {
@@ -89,7 +86,7 @@ class BankAccountController {
     }
   }
 
-  public async deleteByUserIdAndBankAccountId(
+  public async delete(
     req: IRequest<unknown, IBankAccountIdParams>,
     res: IResponse<void>
   ) {
