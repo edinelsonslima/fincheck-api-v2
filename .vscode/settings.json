@@ -20,6 +20,7 @@
     "DATETIME",
     "GETDATE",
     "ISNULL",
+    "Millis",
     "NEWID",
     "NVARCHAR",
     "recordset",
