@@ -1,5 +1,5 @@
 import { sanitizeObject } from '@helpers/sanitize-object';
-import { separateJoins } from '@helpers/separete-joins';
+import { separateJoins } from '@helpers/separate-joins';
 import { snake2camel } from '@helpers/snake-to-camel';
 import {
   ITransaction,
