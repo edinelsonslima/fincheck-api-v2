@@ -1,3 +1,4 @@
+import { enStatusCode } from '@enums/status-code';
 import { ISigninBodySchema, ISignupBodySchema } from '@interfaces/auth';
 import { IRequest, IResponse } from '@interfaces/express';
 import { IAuthService, authService } from '@services/auth';
@@ -13,7 +14,7 @@ class AuthController {
     res: IResponse<{ accessToken: string }>
   ) {
     const accessToken = await this.authService.signin(req.body);
-    return res.status(201).json({ accessToken });
+    return res.status(enStatusCode.CREATED).json({ accessToken });
   }
 
   public async signup(
@@ -21,7 +22,7 @@ class AuthController {
     res: IResponse<{ accessToken: string }>
   ) {
     const { accessToken } = await this.authService.signup(req.body);
-    return res.status(201).json({ accessToken });
+    return res.status(enStatusCode.CREATED).json({ accessToken });
   }
 }
 

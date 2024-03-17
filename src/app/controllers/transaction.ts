@@ -1,3 +1,4 @@
+import { enStatusCode } from '@enums/status-code';
 import { IRequest, IResponse } from '@interfaces/express';
 import {
   ICreateTransactionBody,
@@ -25,7 +26,7 @@ class TransactionController {
       req.query
     );
 
-    return res.status(200).json(transactions);
+    return res.status(enStatusCode.OK).json(transactions);
   }
 
   public async store(
@@ -37,7 +38,7 @@ class TransactionController {
       req.body
     );
 
-    return res.status(201).json(transaction);
+    return res.status(enStatusCode.CREATED).json(transaction);
   }
 
   public async update(
@@ -50,7 +51,7 @@ class TransactionController {
       req.body
     );
 
-    return res.status(200).json(transaction);
+    return res.status(enStatusCode.OK).json(transaction);
   }
 
   public async delete(
@@ -58,7 +59,7 @@ class TransactionController {
     res: IResponse<void>
   ) {
     await this.transactionService.delete(req.userId, req.params.transactionId);
-    return res.status(204).send();
+    return res.status(enStatusCode.NO_CONTENT).send();
   }
 }
 

@@ -1,3 +1,4 @@
+import { enStatusCode } from '@enums/status-code';
 import { ICategory } from '@interfaces/category';
 import { IRequest, IResponse } from '@interfaces/express';
 import { ICategoryService, categoryService } from '@services/category';
@@ -9,7 +10,7 @@ class CategoryController {
 
   public async index(req: IRequest, res: IResponse<ICategory[]>) {
     const categories = await this.categoryService.findAllByUserId(req.userId);
-    return res.status(200).json(categories);
+    return res.status(enStatusCode.OK).json(categories);
   }
 }
 

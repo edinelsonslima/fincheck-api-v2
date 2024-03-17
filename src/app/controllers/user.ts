@@ -1,3 +1,4 @@
+import { enStatusCode } from '@enums/status-code';
 import { IRequest, IResponse } from '@interfaces/express';
 import { IUser } from '@interfaces/user';
 import { IUserService, userService } from '@services/user';
@@ -9,7 +10,7 @@ class UserController {
 
   public async show(req: IRequest, res: IResponse<IUser>) {
     const user = await this.userService.getUserById(req.userId);
-    return res.status(200).json(user);
+    return res.status(enStatusCode.OK).json(user);
   }
 }
 

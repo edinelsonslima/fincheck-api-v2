@@ -1,3 +1,4 @@
+import { enStatusCode } from '@enums/status-code';
 import {
   IBankAccount,
   IBankAccountIdParams,
@@ -24,7 +25,7 @@ class BankAccountController {
       req.userId
     );
 
-    return res.status(200).json(bankAccounts);
+    return res.status(enStatusCode.OK).json(bankAccounts);
   }
 
   public async store(
@@ -36,7 +37,7 @@ class BankAccountController {
       req.body
     );
 
-    return res.status(201).json(bankAccount);
+    return res.status(enStatusCode.CREATED).json(bankAccount);
   }
 
   public async show(
@@ -49,7 +50,7 @@ class BankAccountController {
         req.params.bankAccountId
       );
 
-    return res.status(200).json(bankAccount);
+    return res.status(enStatusCode.OK).json(bankAccount);
   }
 
   public async update(
@@ -63,7 +64,7 @@ class BankAccountController {
         req.body
       );
 
-    return res.status(200).json(bankAccount);
+    return res.status(enStatusCode.OK).json(bankAccount);
   }
 
   public async delete(
@@ -75,7 +76,7 @@ class BankAccountController {
       req.params.bankAccountId
     );
 
-    return res.status(204).send();
+    return res.status(enStatusCode.NO_CONTENT).send();
   }
 }
 
