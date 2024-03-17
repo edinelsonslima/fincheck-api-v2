@@ -9,7 +9,7 @@ export function validate(
 ) {
   return async (req: IRequest, res: IResponse, next: NextFunction) => {
     try {
-      req[field] = await validator.parseAsync(req.body);
+      req[field] = await validator.parseAsync(req[field]);
 
       return next();
     } catch (err) {
