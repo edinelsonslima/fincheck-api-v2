@@ -22,8 +22,8 @@ export const updateTransactionBodySchema = z.object({
 });
 
 export const findTransactionsQuerySchema = z.object({
-  year: z.coerce.number().int().min(0),
-  month: z.coerce.number().int().min(1).max(12),
+  month: z.coerce.number().int().min(0).max(11).nonnegative(),
+  year: z.coerce.number().int().min(2000).max(9999).positive(),
   bankAccountId: z.string().uuid().min(1).optional(),
   type: z
     .enum([enTransactionType.EXPENSE, enTransactionType.INCOME])
