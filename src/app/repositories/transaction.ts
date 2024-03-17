@@ -1,8 +1,10 @@
 import { IBankAccountMapperPersistence } from '@interfaces/bank-account';
 import { ICategoryMapperPersistence } from '@interfaces/category';
 import {
+  ICreateTransactionBody,
   IFindTransactionsQuery,
   ITransactionMapperPersistence,
+  IUpdateTransactionBody,
 } from '@interfaces/transaction';
 import { ITransactionMapper, transactionMapper } from '@mappers/transaction';
 import { IDatabase, db } from 'database';
@@ -22,6 +24,7 @@ class TransactionRepository {
     userId: string,
     { month, year, bankAccountId, type }: IFindTransactionsQuery
   ) {
+    month += 1;
     const result = await this.db
       .query<ITransactionsJoinBankAccountsAndCategories>`
       SELECT * FROM transactions
@@ -35,6 +38,66 @@ class TransactionRepository {
     `;
 
     return this.mapper.toArray(result);
+  }
+
+  public async create(
+    userId: string,
+    {
+      name,
+      type,
+      bankAccountId,
+      categoryId,
+      date,
+      value,
+    }: ICreateTransactionBody
+  ) {
+    const result = await this.db.query<ITransactionMapperPersistence>`
+      INSERT INTO transactions (name, type, bank_account_id, category_id, date, value, user_id)
+      OUTPUT INSERTED.*
+      VALUES (${name}, ${type}, ${bankAccountId}, ${categoryId}, ${date}, ${value}, ${userId})
+    `;
+
+    return this.mapper.toObject(result);
+  }
+
+  public async update(
+    userId: string,
+    transactionId: string,
+    {
+      name,
+      type,
+      bankAccountId,
+      categoryId,
+      date,
+      value,
+    }: IUpdateTransactionBody
+  ) {
+    const result = await this.db.query<ITransactionMapperPersistence>`
+      UPDATE transactions
+      SET name = ISNULL(${name ?? null}, name),
+          type = COALESCE(${type ?? null}, type),
+          bank_account_id = ISNULL(${bankAccountId ?? null}, bank_account_id),
+          category_id = ISNULL(${categoryId ?? null}, category_id),
+          date = ISNULL(${date ?? null}, date),
+          value = ISNULL(${value ?? null}, value)
+      OUTPUT INSERTED.*
+      WHERE id = ${transactionId} AND user_id = ${userId}
+    `;
+
+    return this.mapper.toObject(result);
+  }
+
+  public async delete(userId: string, transactionId: string) {
+    const result = await this.db.query`
+      IF EXISTS (
+        SELECT 1 FROM transactions
+        WHERE transactions.user_id = ${userId} AND transactions.id = ${transactionId}
+      )
+      DELETE FROM transactions
+      WHERE transactions.id = ${transactionId} AND transactions.user_id = ${userId}
+    `;
+
+    return result.rowsAffected.length > 0;
   }
 }
 

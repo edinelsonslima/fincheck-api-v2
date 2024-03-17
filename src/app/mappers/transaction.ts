@@ -14,14 +14,17 @@ const TRANSACTION_VALUE = 0;
 const BANK_ACCOUNT_VALUE = 1;
 const CATEGORIES_VALUE = 2;
 
+interface IQueryResult
+  extends IResult<
+    ITransactionMapperPersistence | ITransactionsJoinBankAccountsAndCategories
+  > {}
+
 class TransactionMapper {
   constructor() {
     this.toDomain = this.toDomain.bind(this);
   }
 
-  public toObject(
-    queryResult: IResult<ITransactionsJoinBankAccountsAndCategories>
-  ) {
+  public toObject(queryResult: IQueryResult) {
     const transactions = this.getTransactions(queryResult);
 
     if (!transactions) {
@@ -33,9 +36,7 @@ class TransactionMapper {
     return firstTransaction;
   }
 
-  public toArray(
-    queryResult: IResult<ITransactionsJoinBankAccountsAndCategories>
-  ) {
+  public toArray(queryResult: IQueryResult) {
     return this.getTransactions(queryResult);
   }
 
@@ -43,9 +44,7 @@ class TransactionMapper {
     return sanitizeObject(snake2camel(transaction)) as unknown as ITransaction;
   }
 
-  private getTransactions(
-    queryResult: IResult<ITransactionsJoinBankAccountsAndCategories>
-  ) {
+  private getTransactions(queryResult: IQueryResult) {
     if (!queryResult.recordset?.length) {
       return undefined;
     }
@@ -60,11 +59,19 @@ class TransactionMapper {
       );
 
       const category = categoryMapper.toDomain(
-        separateJoins('category', CATEGORIES_VALUE, data)
+        separateJoins(
+          'category',
+          CATEGORIES_VALUE,
+          data
+        ) as ITransactionsJoinBankAccountsAndCategories
       );
 
       const bankAccount = bankAccountMapper.toDomain(
-        separateJoins('bankAccount', BANK_ACCOUNT_VALUE, data)
+        separateJoins(
+          'bankAccount',
+          BANK_ACCOUNT_VALUE,
+          data
+        ) as ITransactionsJoinBankAccountsAndCategories
       );
 
       return [...acc, { ...transaction, category, bankAccount }];

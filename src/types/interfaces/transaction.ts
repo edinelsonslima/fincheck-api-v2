@@ -2,6 +2,7 @@ import { enTransactionType } from '@enums/transaction';
 import {
   createTransactionBodySchema,
   findTransactionsQuerySchema,
+  transactionIdParamsSchema,
   updateTransactionBodySchema,
 } from '@validators/transaction';
 import { z } from 'zod';
@@ -43,3 +44,5 @@ export type IUpdateTransactionBody = z.infer<
 export type IFindTransactionsQuery = z.infer<
   typeof findTransactionsQuerySchema
 >;
+
+export type ITransactionIdParam = z.infer<typeof transactionIdParamsSchema>;

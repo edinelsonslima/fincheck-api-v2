@@ -1,4 +1,8 @@
-import { IFindTransactionsQuery } from '@interfaces/transaction';
+import {
+  ICreateTransactionBody,
+  IFindTransactionsQuery,
+  IUpdateTransactionBody,
+} from '@interfaces/transaction';
 import {
   ITransactionRepository,
   transactionRepository,
@@ -7,16 +11,70 @@ import {
 class TransactionService {
   constructor(private readonly transactionRepository: ITransactionRepository) {}
 
-  public findAllByUserId(
+  public async findAllByUserId(
     userId: string,
     { month, year, bankAccountId, type }: IFindTransactionsQuery
   ) {
-    return this.transactionRepository.findAllByUserId(userId, {
-      month,
-      year,
+    const transactions = await this.transactionRepository.findAllByUserId(
+      userId,
+      { month, year, bankAccountId, type }
+    );
+
+    return transactions ?? [];
+  }
+
+  public async create(
+    userId: string,
+    {
       bankAccountId,
+      categoryId,
+      date,
+      name,
       type,
+      value,
+    }: ICreateTransactionBody
+  ) {
+    return this.transactionRepository.create(userId, {
+      bankAccountId,
+      categoryId,
+      date,
+      name,
+      type,
+      value,
     });
+  }
+
+  public update(
+    userId: string,
+    transactionId: string,
+    {
+      bankAccountId,
+      categoryId,
+      date,
+      name,
+      type,
+      value,
+    }: IUpdateTransactionBody
+  ) {
+    return this.transactionRepository.update(userId, transactionId, {
+      bankAccountId,
+      categoryId,
+      date,
+      name,
+      type,
+      value,
+    });
+  }
+
+  public async delete(userId: string, transactionId: string) {
+    const transaction = await this.transactionRepository.delete(
+      userId,
+      transactionId
+    );
+
+    if (!transaction) {
+      throw new Error('Transaction not found');
+    }
   }
 }
 

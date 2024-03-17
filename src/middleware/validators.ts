@@ -1,7 +1,7 @@
 import { env } from 'app/settings';
 import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
-import { ZodSchema, unknown, z } from 'zod';
+import { ZodSchema, z } from 'zod';
 
 interface IAuthorizationPayload {
   userId: string;
@@ -36,7 +36,11 @@ class validate {
   }
 
   public static query<T>(validator: ZodSchema<T>) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (
+      req: Request<any, any, any, T>,
+      res: Response,
+      next: NextFunction
+    ) => {
       try {
         const data = await validator.parseAsync(req.query);
         (req.query as T) = data;
