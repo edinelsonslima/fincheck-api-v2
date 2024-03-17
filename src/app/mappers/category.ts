@@ -5,7 +5,7 @@ import {
 } from '@interfaces/category';
 import { IResult } from 'mssql';
 
-class CategoryFactory {
+class CategoryMapper {
   constructor() {
     this.toDomain = this.toDomain.bind(this);
   }
@@ -35,10 +35,8 @@ class CategoryFactory {
     return queryResult.recordset.map(this.toDomain);
   }
 
-  private toDomain(
-    category: ICategoryMapperPersistence
-  ): ICategoryMapperDomain {
-    return this.sanitizeObject({
+  private toDomain(category: ICategoryMapperPersistence) {
+    return this.sanitizeObject<ICategoryMapperDomain>({
       id: category.id,
       userId: category.user_id,
       name: category.name,
@@ -57,5 +55,5 @@ class CategoryFactory {
   }
 }
 
-export type ICategoryFactory = InstanceType<typeof CategoryFactory>;
-export const categoryFactory = new CategoryFactory();
+export type ICategoryMapper = InstanceType<typeof CategoryMapper>;
+export const categoryMapper = new CategoryMapper();

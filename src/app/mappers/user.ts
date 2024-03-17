@@ -1,7 +1,7 @@
 import { IUserMapperDomain, IUserMapperPersistence } from '@interfaces/user';
 import { IResult } from 'mssql';
 
-class UserFactory {
+class UserMapper {
   constructor() {
     this.toDomain = this.toDomain.bind(this);
   }
@@ -31,8 +31,8 @@ class UserFactory {
     return queryResult.recordset.map(this.toDomain);
   }
 
-  private toDomain(user: IUserMapperPersistence): IUserMapperDomain {
-    return this.sanitizeObject({
+  private toDomain(user: IUserMapperPersistence) {
+    return this.sanitizeObject<IUserMapperDomain>({
       id: user.id,
       name: user.name,
       email: user.email,
@@ -50,5 +50,5 @@ class UserFactory {
   }
 }
 
-export type IUserFactory = InstanceType<typeof UserFactory>;
-export const userFactory = new UserFactory();
+export type IUserMapper = InstanceType<typeof UserMapper>;
+export const userMapper = new UserMapper();

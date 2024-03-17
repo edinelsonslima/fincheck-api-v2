@@ -1,11 +1,11 @@
 import { ICategoryMapperPersistence } from '@interfaces/category';
-import { ICategoryFactory, categoryFactory } from '@mappers/category';
+import { ICategoryMapper, categoryMapper } from '@mappers/category';
 import { IDatabase, db } from 'database';
 
 class CategoryRepository {
   constructor(
     private readonly db: IDatabase,
-    private readonly factory: ICategoryFactory
+    private readonly mapper: ICategoryMapper
   ) {}
 
   public async findAllByUserId(userId: string) {
@@ -14,9 +14,9 @@ class CategoryRepository {
       WHERE user_id = ${userId}
     `;
 
-    return this.factory.toArray(result);
+    return this.mapper.toArray(result);
   }
 }
 
 export type ICategoryRepository = InstanceType<typeof CategoryRepository>;
-export const categoryRepository = new CategoryRepository(db, categoryFactory);
+export const categoryRepository = new CategoryRepository(db, categoryMapper);

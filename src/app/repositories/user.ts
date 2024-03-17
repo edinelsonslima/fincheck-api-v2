@@ -1,6 +1,6 @@
 import { ISignupBodySchema } from '@interfaces/auth';
 import { IUserMapperPersistence } from '@interfaces/user';
-import { IUserFactory, userFactory } from '@mappers/user';
+import { IUserMapper, userMapper } from '@mappers/user';
 import { IDatabase, db } from 'database';
 import { categories } from 'database/categories';
 
@@ -9,7 +9,7 @@ interface ICreateUser extends ISignupBodySchema {}
 class UserRepository {
   constructor(
     private readonly db: IDatabase,
-    private readonly factory: IUserFactory
+    private readonly factory: IUserMapper
   ) {}
 
   public async findOneById(userId: string) {
@@ -56,4 +56,4 @@ class UserRepository {
 }
 
 export type IUserRepository = InstanceType<typeof UserRepository>;
-export const userRepository = new UserRepository(db, userFactory);
+export const userRepository = new UserRepository(db, userMapper);
