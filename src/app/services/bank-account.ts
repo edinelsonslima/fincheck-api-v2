@@ -1,3 +1,4 @@
+import { enStatusCode } from '@enums/status-code';
 import { enTransactionType } from '@enums/transaction';
 import {
   ICreateBankAccountBody,
@@ -7,6 +8,7 @@ import {
   IBankAccountRepository,
   bankAccountRepository,
 } from '@repositories/bank-account';
+import { BankAccountError } from 'errors/bank-account-error';
 
 class BankAccountService {
   constructor(private readonly bankAccountRepository: IBankAccountRepository) {}
@@ -39,7 +41,10 @@ class BankAccountService {
     const bankAccount = await this.bankAccountRepository.create(userId, data);
 
     if (!bankAccount) {
-      throw new Error('bank account not created');
+      throw new BankAccountError(
+        'bank account not created',
+        enStatusCode.NOT_FOUND
+      );
     }
 
     return bankAccount;
@@ -56,7 +61,10 @@ class BankAccountService {
       );
 
     if (!bankAccount) {
-      throw new Error('bank account not found');
+      throw new BankAccountError(
+        'bank account not found',
+        enStatusCode.NOT_FOUND
+      );
     }
 
     return bankAccount;
@@ -75,7 +83,10 @@ class BankAccountService {
       );
 
     if (!bankAccount) {
-      throw new Error('bank account not updated');
+      throw new BankAccountError(
+        'bank account not updated',
+        enStatusCode.NOT_FOUND
+      );
     }
 
     return bankAccount;
@@ -92,7 +103,10 @@ class BankAccountService {
       );
 
     if (!bankAccount) {
-      throw new Error('bank account not deleted');
+      throw new BankAccountError(
+        'bank account not deleted',
+        enStatusCode.NOT_FOUND
+      );
     }
   }
 }

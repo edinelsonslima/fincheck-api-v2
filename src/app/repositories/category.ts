@@ -1,6 +1,7 @@
 import { ICategoryMapperPersistence } from '@interfaces/category';
 import { ICategoryMapper, categoryMapper } from '@mappers/category';
 import { IDatabase, db } from 'database';
+import { CategoryError } from 'errors/category-error';
 
 class CategoryRepository {
   constructor(
@@ -9,12 +10,17 @@ class CategoryRepository {
   ) {}
 
   public async findAllByUserId(userId: string) {
-    const result = await this.db.query<ICategoryMapperPersistence>`
-      SELECT * FROM categories
-      WHERE user_id = ${userId}
-    `;
+    try {
+      const result = await this.db.query<ICategoryMapperPersistence>`
+        SELECT * FROM categories
+        WHERE user_id = ${userId}
+      `;
 
-    return this.mapper.toArray(result);
+      return this.mapper.toArray(result);
+    } catch (error) {
+      console.error(error);
+      throw new CategoryError('error finding categories');
+    }
   }
 }
 

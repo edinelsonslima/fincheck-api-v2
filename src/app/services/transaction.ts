@@ -1,3 +1,4 @@
+import { enStatusCode } from '@enums/status-code';
 import {
   ICreateTransactionBody,
   IFindTransactionsQuery,
@@ -7,6 +8,7 @@ import {
   ITransactionRepository,
   transactionRepository,
 } from '@repositories/transaction';
+import { TransactionError } from 'errors/transaction-error';
 
 class TransactionService {
   constructor(private readonly transactionRepository: ITransactionRepository) {}
@@ -17,14 +19,21 @@ class TransactionService {
       data
     );
 
-    return transactions ?? [];
+    if (!transactions) {
+      return [];
+    }
+
+    return transactions;
   }
 
   public async create(userId: string, data: ICreateTransactionBody) {
     const transaction = await this.transactionRepository.create(userId, data);
 
     if (!transaction) {
-      throw new Error('transaction not created');
+      throw new TransactionError(
+        'transaction not created',
+        enStatusCode.NOT_FOUND
+      );
     }
 
     return transaction;
@@ -42,7 +51,10 @@ class TransactionService {
     );
 
     if (!transaction) {
-      throw new Error('transaction not updated');
+      throw new TransactionError(
+        'transaction not updated',
+        enStatusCode.NOT_FOUND
+      );
     }
 
     return transaction;
@@ -55,7 +67,10 @@ class TransactionService {
     );
 
     if (!transaction) {
-      throw new Error('transaction not deleted');
+      throw new TransactionError(
+        'transaction not deleted',
+        enStatusCode.NOT_FOUND
+      );
     }
   }
 }

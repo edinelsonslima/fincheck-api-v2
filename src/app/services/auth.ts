@@ -1,7 +1,10 @@
+import { enStatusCode } from '@enums/status-code';
 import { ISigninBodySchema, ISignupBodySchema } from '@interfaces/auth';
 import { IUserRepository, userRepository } from '@repositories/user';
 import { env } from 'app/settings';
 import { compare, hash } from 'bcryptjs';
+import { AuthorizationError } from 'errors/authorization-error';
+import { UserError } from 'errors/user-error';
 import { sign } from 'jsonwebtoken';
 
 class AuthService {
@@ -11,13 +14,13 @@ class AuthService {
     const user = await this.userRepository.findOneByEmail(email);
 
     if (!user) {
-      throw new Error('invalid credentials');
+      throw new AuthorizationError('invalid credentials');
     }
 
     const isValidPassword = await compare(password, user.password);
 
     if (!isValidPassword) {
-      throw new Error('invalid credentials');
+      throw new AuthorizationError('invalid credentials');
     }
 
     const accessToken = sign({ userId: user.id }, env.JWT_SECRET, {
@@ -31,7 +34,10 @@ class AuthService {
     const userExists = await this.userRepository.findOneByEmail(email);
 
     if (userExists) {
-      throw new Error('this email is already in use');
+      throw new UserError(
+        'this email is already in use',
+        enStatusCode.CONFLICT
+      );
     }
 
     const hashedPassword = await hash(password, 10);
@@ -43,7 +49,7 @@ class AuthService {
     });
 
     if (!user) {
-      throw new Error('error creating user');
+      throw new UserError('error creating user');
     }
 
     const accessToken = sign({ userId: user.id }, env.JWT_SECRET, {
