@@ -30,10 +30,7 @@ class TransactionService {
     const transaction = await this.transactionRepository.create(userId, data);
 
     if (!transaction) {
-      throw new TransactionError(
-        'transaction not created',
-        enStatusCode.NOT_FOUND
-      );
+      throw new TransactionError('transaction not created');
     }
 
     return transaction;
@@ -51,10 +48,7 @@ class TransactionService {
     );
 
     if (!transaction) {
-      throw new TransactionError(
-        'transaction not updated',
-        enStatusCode.NOT_FOUND
-      );
+      throw new TransactionError('transaction not updated');
     }
 
     return transaction;

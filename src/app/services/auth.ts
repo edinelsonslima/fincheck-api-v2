@@ -49,7 +49,7 @@ class AuthService {
     });
 
     if (!user) {
-      throw new UserError('error creating user');
+      throw new UserError('user not created');
     }
 
     const accessToken = sign({ userId: user.id }, env.JWT_SECRET, {

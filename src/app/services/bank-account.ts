@@ -41,10 +41,7 @@ class BankAccountService {
     const bankAccount = await this.bankAccountRepository.create(userId, data);
 
     if (!bankAccount) {
-      throw new BankAccountError(
-        'bank account not created',
-        enStatusCode.NOT_FOUND
-      );
+      throw new BankAccountError('bank account not created');
     }
 
     return bankAccount;
@@ -83,10 +80,7 @@ class BankAccountService {
       );
 
     if (!bankAccount) {
-      throw new BankAccountError(
-        'bank account not updated',
-        enStatusCode.NOT_FOUND
-      );
+      throw new BankAccountError('bank account not updated');
     }
 
     return bankAccount;
