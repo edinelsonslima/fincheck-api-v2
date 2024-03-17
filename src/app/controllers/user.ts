@@ -1,21 +1,20 @@
+import { IRequest, IResponse } from '@interfaces/express';
+import { IUser } from '@interfaces/user';
 import { IUserService, userService } from '@services/user';
-import { Request, Response } from 'express';
 
 class UserController {
   constructor(private readonly userService: IUserService) {
     this.me = this.me.bind(this);
   }
 
-  public async me(req: Request, res: Response) {
+  public async me(req: IRequest, res: IResponse<IUser>) {
     try {
-      const userId = req.userId;
+      const user = await this.userService.getUserById(req.userId);
 
-      const user = await this.userService.getUserById(userId);
-
-      res.status(200).json(user);
+      return res.status(200).json(user);
     } catch (error: any) {
       const err: Error = error;
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     }
   }
 }

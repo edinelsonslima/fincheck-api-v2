@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import { ConnectionPool } from 'mssql';
 
 declare global {
@@ -8,3 +9,9 @@ declare global {
     }
   }
 }
+
+export interface IRequest<TBody = unknown, TParams = unknown, TQuery = unknown>
+  extends Request<TParams, any, TBody, TQuery> {}
+
+export interface IResponse<TBody = unknown>
+  extends Response<TBody | { message: string }> {}

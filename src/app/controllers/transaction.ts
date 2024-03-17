@@ -1,10 +1,12 @@
+import { IRequest, IResponse } from '@interfaces/express';
 import {
+  ICreateTransactionBody,
   IFindTransactionsQuery,
+  ITransaction,
   ITransactionIdParam,
   IUpdateTransactionBody,
 } from '@interfaces/transaction';
 import { ITransactionService, transactionService } from '@services/transaction';
-import { Request, Response } from 'express';
 
 class TransactionController {
   constructor(private readonly transactionService: ITransactionService) {
@@ -15,79 +17,71 @@ class TransactionController {
   }
 
   public async findAllByUserId(
-    req: Request<any, any, any, IFindTransactionsQuery>,
-    res: Response
+    req: IRequest<unknown, unknown, IFindTransactionsQuery>,
+    res: IResponse<ITransaction[]>
   ) {
     try {
-      const userId = req.userId;
-      const { year, month, bankAccountId, type } = req.query;
-
       const transactions = await this.transactionService.findAllByUserId(
-        userId,
-        { year, month, bankAccountId, type }
+        req.userId,
+        req.query
       );
 
       return res.status(200).json(transactions);
     } catch (error: any) {
       const err: Error = error;
-      return res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     }
   }
 
-  public async create(req: Request, res: Response) {
+  public async create(
+    req: IRequest<ICreateTransactionBody>,
+    res: IResponse<ITransaction>
+  ) {
     try {
-      const userId = req.userId;
-      const { bankAccountId, categoryId, date, name, type, value } = req.body;
-
-      const transaction = await this.transactionService.create(userId, {
-        bankAccountId,
-        categoryId,
-        date,
-        name,
-        type,
-        value,
-      });
+      const transaction = await this.transactionService.create(
+        req.userId,
+        req.body
+      );
 
       return res.status(201).json(transaction);
     } catch (error: any) {
       const err: Error = error;
-      return res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     }
   }
 
   public async update(
-    req: Request<ITransactionIdParam, any, IUpdateTransactionBody>,
-    res: Response
+    req: IRequest<IUpdateTransactionBody, ITransactionIdParam>,
+    res: IResponse<ITransaction>
   ) {
     try {
-      const userId = req.userId;
-      const { transactionId } = req.params;
-      const { bankAccountId, categoryId, date, name, type, value } = req.body;
-
       const transaction = await this.transactionService.update(
-        userId,
-        transactionId,
-        { bankAccountId, categoryId, date, name, type, value }
+        req.userId,
+        req.params.transactionId,
+        req.body
       );
 
       return res.status(200).json(transaction);
     } catch (error: any) {
       const err: Error = error;
-      return res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     }
   }
 
-  public async delete(req: Request<ITransactionIdParam>, res: Response) {
+  public async delete(
+    req: IRequest<unknown, ITransactionIdParam>,
+    res: IResponse<void>
+  ) {
     try {
-      const userId = req.userId;
-      const { transactionId } = req.params;
-
-      await this.transactionService.delete(userId, transactionId);
+      await this.transactionService.delete(
+        req.userId,
+        req.params.transactionId
+      );
 
       return res.status(204).send();
     } catch (error: any) {
       const err: Error = error;
-      return res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     }
   }
 }

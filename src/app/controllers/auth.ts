@@ -1,5 +1,6 @@
+import { ISigninBodySchema, ISignupBodySchema } from '@interfaces/auth';
+import { IRequest, IResponse } from '@interfaces/express';
 import { IAuthService, authService } from '@services/auth';
-import { Request, Response } from 'express';
 
 class AuthController {
   constructor(private readonly authService: IAuthService) {
@@ -7,36 +8,31 @@ class AuthController {
     this.signup = this.signup.bind(this);
   }
 
-  public async signin(req: Request, res: Response) {
+  public async signin(
+    req: IRequest<ISigninBodySchema>,
+    res: IResponse<{ accessToken: string }>
+  ) {
     try {
-      const { email, password } = req.body;
+      const accessToken = await this.authService.signin(req.body);
 
-      const accessToken = await this.authService.signin({
-        email,
-        password,
-      });
-
-      res.status(201).json({ accessToken });
+      return res.status(201).json({ accessToken });
     } catch (error: any) {
       const err: Error = error;
-      res.status(401).json({ message: err.message });
+      return res.status(401).json({ message: err.message });
     }
   }
 
-  public async signup(req: Request, res: Response) {
+  public async signup(
+    req: IRequest<ISignupBodySchema>,
+    res: IResponse<{ accessToken: string }>
+  ) {
     try {
-      const { name, email, password } = req.body;
+      const { accessToken } = await this.authService.signup(req.body);
 
-      const { accessToken } = await this.authService.signup({
-        name,
-        email,
-        password,
-      });
-
-      res.status(201).json({ accessToken });
+      return res.status(201).json({ accessToken });
     } catch (error: any) {
       const err: Error = error;
-      res.status(400).json({ message: err.message });
+      return res.status(400).json({ message: err.message });
     }
   }
 }

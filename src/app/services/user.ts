@@ -7,7 +7,7 @@ class UserService {
     const user = await this.userRepository.findOneById(userId);
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error('user not found');
     }
 
     return user;

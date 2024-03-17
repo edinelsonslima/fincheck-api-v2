@@ -1,21 +1,20 @@
+import { ICategory } from '@interfaces/category';
+import { IRequest, IResponse } from '@interfaces/express';
 import { ICategoryService, categoryService } from '@services/category';
-import { Request, Response } from 'express';
 
 class CategoryController {
   constructor(private readonly categoryService: ICategoryService) {
     this.findAllByUserId = this.findAllByUserId.bind(this);
   }
 
-  public async findAllByUserId(req: Request, res: Response) {
+  public async findAllByUserId(req: IRequest, res: IResponse<ICategory[]>) {
     try {
-      const userId = req.userId;
+      const categories = await this.categoryService.findAllByUserId(req.userId);
 
-      const categories = await this.categoryService.findAllByUserId(userId);
-
-      res.status(200).json(categories);
+      return res.status(200).json(categories);
     } catch (error: any) {
       const err: Error = error;
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     }
   }
 }

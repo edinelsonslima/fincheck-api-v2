@@ -11,59 +11,41 @@ import {
 class TransactionService {
   constructor(private readonly transactionRepository: ITransactionRepository) {}
 
-  public async findAllByUserId(
-    userId: string,
-    { month, year, bankAccountId, type }: IFindTransactionsQuery
-  ) {
+  public async findAllByUserId(userId: string, data: IFindTransactionsQuery) {
     const transactions = await this.transactionRepository.findAllByUserId(
       userId,
-      { month, year, bankAccountId, type }
+      data
     );
 
     return transactions ?? [];
   }
 
-  public async create(
-    userId: string,
-    {
-      bankAccountId,
-      categoryId,
-      date,
-      name,
-      type,
-      value,
-    }: ICreateTransactionBody
-  ) {
-    return this.transactionRepository.create(userId, {
-      bankAccountId,
-      categoryId,
-      date,
-      name,
-      type,
-      value,
-    });
+  public async create(userId: string, data: ICreateTransactionBody) {
+    const transaction = await this.transactionRepository.create(userId, data);
+
+    if (!transaction) {
+      throw new Error('transaction not created');
+    }
+
+    return transaction;
   }
 
-  public update(
+  public async update(
     userId: string,
     transactionId: string,
-    {
-      bankAccountId,
-      categoryId,
-      date,
-      name,
-      type,
-      value,
-    }: IUpdateTransactionBody
+    data: IUpdateTransactionBody
   ) {
-    return this.transactionRepository.update(userId, transactionId, {
-      bankAccountId,
-      categoryId,
-      date,
-      name,
-      type,
-      value,
-    });
+    const transaction = await this.transactionRepository.update(
+      userId,
+      transactionId,
+      data
+    );
+
+    if (!transaction) {
+      throw new Error('transaction not updated');
+    }
+
+    return transaction;
   }
 
   public async delete(userId: string, transactionId: string) {
@@ -73,7 +55,7 @@ class TransactionService {
     );
 
     if (!transaction) {
-      throw new Error('Transaction not found');
+      throw new Error('transaction not deleted');
     }
   }
 }

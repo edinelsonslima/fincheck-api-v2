@@ -10,7 +10,7 @@ class CategoryService {
     const categories = await this.categoryRepository.findAllByUserId(userId);
 
     if (!categories) {
-      throw new Error('No categories found');
+      throw new Error('no categories found');
     }
 
     return categories;

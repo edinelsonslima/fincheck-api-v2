@@ -1,8 +1,14 @@
 import {
+  IBankAccount,
+  IBankAccountIdParams,
+  ICreateBankAccountBody,
+  IUpdateBankAccountBody,
+} from '@interfaces/bank-account';
+import { IRequest, IResponse } from '@interfaces/express';
+import {
   IBankAccountService,
   bankAccountService,
 } from '@services/bank-account';
-import { Request, Response } from 'express';
 
 class BankAccountController {
   constructor(private readonly bankAccountService: IBankAccountService) {
@@ -16,91 +22,87 @@ class BankAccountController {
       this.deleteByUserIdAndBankAccountId.bind(this);
   }
 
-  public async findAllByUserId(req: Request, res: Response) {
+  public async findAllByUserId(req: IRequest, res: IResponse<IBankAccount[]>) {
     try {
-      const userId = req.userId;
-
-      const bankAccounts =
-        await this.bankAccountService.findAllByUserId(userId);
+      const bankAccounts = await this.bankAccountService.findAllByUserId(
+        req.userId
+      );
 
       return res.status(200).json(bankAccounts);
     } catch (error: any) {
       const err: Error = error;
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     }
   }
 
-  public async create(req: Request, res: Response) {
+  public async create(
+    req: IRequest<ICreateBankAccountBody>,
+    res: IResponse<IBankAccount>
+  ) {
     try {
-      const userId = req.userId;
-      const { color, initialBalance, name, type } = req.body;
-
-      const bankAccount = await this.bankAccountService.create(userId, {
-        color,
-        initialBalance,
-        name,
-        type,
-      });
+      const bankAccount = await this.bankAccountService.create(
+        req.userId,
+        req.body
+      );
 
       return res.status(201).json(bankAccount);
     } catch (error: any) {
       const err: Error = error;
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     }
   }
 
-  public async findOneByUserIdAndBankAccountId(req: Request, res: Response) {
+  public async findOneByUserIdAndBankAccountId(
+    req: IRequest<unknown, IBankAccountIdParams>,
+    res: IResponse<IBankAccount>
+  ) {
     try {
-      const userId = req.userId;
-      const bankAccountId = req.params.bankAccountId;
-
       const bankAccount =
         await this.bankAccountService.findOneByUserIdAndBankAccountId(
-          userId,
-          bankAccountId
+          req.userId,
+          req.params.bankAccountId
         );
 
       return res.status(200).json(bankAccount);
     } catch (error: any) {
       const err: Error = error;
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     }
   }
 
-  public async updateByUserIdAndBankAccountId(req: Request, res: Response) {
+  public async updateByUserIdAndBankAccountId(
+    req: IRequest<IUpdateBankAccountBody, IBankAccountIdParams>,
+    res: IResponse<IBankAccount>
+  ) {
     try {
-      const userId = req.userId;
-      const { bankAccountId } = req.params;
-      const { color, initialBalance, name, type } = req.body;
-
       const bankAccount =
         await this.bankAccountService.updateByUserIdAndBankAccountId(
-          userId,
-          bankAccountId,
-          { color, initialBalance, name, type }
+          req.userId,
+          req.params.bankAccountId,
+          req.body
         );
 
       return res.status(200).json(bankAccount);
     } catch (error: any) {
       const err: Error = error;
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     }
   }
 
-  public async deleteByUserIdAndBankAccountId(req: Request, res: Response) {
+  public async deleteByUserIdAndBankAccountId(
+    req: IRequest<unknown, IBankAccountIdParams>,
+    res: IResponse<void>
+  ) {
     try {
-      const userId = req.userId;
-      const bankAccountId = req.params.bankAccountId;
-
       await this.bankAccountService.deleteByUserIdAndBankAccountId(
-        userId,
-        bankAccountId
+        req.userId,
+        req.params.bankAccountId
       );
 
       return res.status(204).send();
     } catch (error: any) {
       const err: Error = error;
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     }
   }
 }

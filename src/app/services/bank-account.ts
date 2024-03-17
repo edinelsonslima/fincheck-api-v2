@@ -1,5 +1,8 @@
 import { enTransactionType } from '@enums/transaction';
-import { ICreateBankAccountBody } from '@interfaces/bank-account';
+import {
+  ICreateBankAccountBody,
+  IUpdateBankAccountBody,
+} from '@interfaces/bank-account';
 import {
   IBankAccountRepository,
   bankAccountRepository,
@@ -12,9 +15,13 @@ class BankAccountService {
     const bankAccounts =
       await this.bankAccountRepository.findAllByUserId(userId);
 
-    return bankAccounts?.map(({ transactions, ...bankAccount }) => ({
+    if (!bankAccounts) {
+      return [];
+    }
+
+    return bankAccounts.map((bankAccount) => ({
       ...bankAccount,
-      currentBalance: transactions?.reduce((acc, transaction) => {
+      currentBalance: bankAccount.transactions?.reduce((acc, transaction) => {
         if (transaction.type === enTransactionType.INCOME) {
           acc += transaction.value;
         }
@@ -28,16 +35,14 @@ class BankAccountService {
     }));
   }
 
-  public create(
-    userId: string,
-    { color, initialBalance, name, type }: ICreateBankAccountBody
-  ) {
-    return this.bankAccountRepository.create(userId, {
-      color,
-      initialBalance,
-      name,
-      type,
-    });
+  public async create(userId: string, data: ICreateBankAccountBody) {
+    const bankAccount = await this.bankAccountRepository.create(userId, data);
+
+    if (!bankAccount) {
+      throw new Error('bank account not created');
+    }
+
+    return bankAccount;
   }
 
   public async findOneByUserIdAndBankAccountId(
@@ -51,7 +56,7 @@ class BankAccountService {
       );
 
     if (!bankAccount) {
-      throw new Error('Bank account not found');
+      throw new Error('bank account not found');
     }
 
     return bankAccount;
@@ -60,17 +65,17 @@ class BankAccountService {
   public async updateByUserIdAndBankAccountId(
     userId: string,
     bankAccountId: string,
-    { color, initialBalance, name, type }: ICreateBankAccountBody
+    data: IUpdateBankAccountBody
   ) {
     const bankAccount =
       await this.bankAccountRepository.updateByUserIdAndBankAccountId(
         userId,
         bankAccountId,
-        { color, initialBalance, name, type }
+        data
       );
 
     if (!bankAccount) {
-      throw new Error('Bank account not found');
+      throw new Error('bank account not updated');
     }
 
     return bankAccount;
@@ -87,7 +92,7 @@ class BankAccountService {
       );
 
     if (!bankAccount) {
-      throw new Error('Bank account not found');
+      throw new Error('bank account not deleted');
     }
   }
 }

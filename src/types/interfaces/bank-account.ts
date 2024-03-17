@@ -1,5 +1,6 @@
 import { enBankAccountType } from '@enums/bank-account';
 import {
+  bankAccountIdParamsSchema,
   createBankAccountBodySchema,
   updateBankAccountBodySchema,
 } from '@validators/bank-account';
@@ -36,3 +37,5 @@ export type ICreateBankAccountBody = z.infer<
 export type IUpdateBankAccountBody = z.infer<
   typeof updateBankAccountBodySchema
 >;
+
+export type IBankAccountIdParams = z.infer<typeof bankAccountIdParamsSchema>;

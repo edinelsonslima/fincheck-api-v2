@@ -1,6 +1,6 @@
 import { sanitizeObject } from '@helpers/sanitize-object';
 import { snake2camel } from '@helpers/snake-to-camel';
-import { ICategoryMapperPersistence } from '@interfaces/category';
+import { ICategory, ICategoryMapperPersistence } from '@interfaces/category';
 import { IResult } from 'mssql';
 
 class CategoryMapper {
@@ -21,8 +21,7 @@ class CategoryMapper {
   }
 
   public toArray(queryResult: IResult<ICategoryMapperPersistence>) {
-    const categories = this.getCategories(queryResult);
-    return categories;
+    return this.getCategories(queryResult);
   }
 
   public toDomain(category: ICategoryMapperPersistence) {
@@ -35,7 +34,10 @@ class CategoryMapper {
       return undefined;
     }
 
-    return queryResult.recordset.map(this.toDomain);
+    return queryResult.recordset.reduce((acc, data) => {
+      const parsed = this.toDomain(data) as unknown as ICategory;
+      return parsed ? [...acc, parsed] : acc;
+    }, [] as ICategory[]);
   }
 }
 
