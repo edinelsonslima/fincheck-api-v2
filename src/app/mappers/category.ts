@@ -4,10 +4,6 @@ import { ICategory, ICategoryMapperPersistence } from '@interfaces/category';
 import { IResult } from 'mssql';
 
 class CategoryMapper {
-  constructor() {
-    this.toDomain = this.toDomain.bind(this);
-  }
-
   public toObject(queryResult: IResult<ICategoryMapperPersistence>) {
     const categories = this.getCategories(queryResult);
 

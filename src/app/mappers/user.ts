@@ -4,10 +4,6 @@ import { IUser, IUserMapperPersistence } from '@interfaces/user';
 import { IResult } from 'mssql';
 
 class UserMapper {
-  constructor() {
-    this.toDomain = this.toDomain.bind(this);
-  }
-
   public toObject(queryResult: IResult<IUserMapperPersistence>) {
     const users = this.getUsers(queryResult);
 
@@ -21,8 +17,7 @@ class UserMapper {
   }
 
   public toArray(queryResult: IResult<IUserMapperPersistence>) {
-    const users = this.getUsers(queryResult);
-    return users;
+    return this.getUsers(queryResult);
   }
 
   public toDomain(user: IUserMapperPersistence) {

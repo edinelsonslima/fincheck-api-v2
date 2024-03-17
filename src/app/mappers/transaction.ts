@@ -20,10 +20,6 @@ interface IQueryResult
   > {}
 
 class TransactionMapper {
-  constructor() {
-    this.toDomain = this.toDomain.bind(this);
-  }
-
   public toObject(queryResult: IQueryResult) {
     const transactions = this.getTransactions(queryResult);
 

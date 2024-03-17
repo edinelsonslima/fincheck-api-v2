@@ -13,10 +13,6 @@ const BANK_ACCOUNT_VALUE = 0;
 const TRANSACTION_VALUE = 1;
 
 class BankAccountMapper {
-  constructor() {
-    this.toDomain = this.toDomain.bind(this);
-  }
-
   public toObject(queryResult: IResult<IBankAccountMapperPersistence>) {
     const query = queryResult as IResult<IBankAccountJoinTransactions>;
     const bankAccounts = this.getBankAccounts(query);
@@ -31,8 +27,7 @@ class BankAccountMapper {
   }
 
   public toArray(queryResult: IResult<IBankAccountJoinTransactions>) {
-    const bankAccounts = this.getBankAccounts(queryResult);
-    return bankAccounts;
+    return this.getBankAccounts(queryResult);
   }
 
   public toDomain(bankAccount: IBankAccountMapperPersistence) {
