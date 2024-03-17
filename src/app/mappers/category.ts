@@ -26,7 +26,8 @@ class CategoryMapper {
   }
 
   public toDomain(category: ICategoryMapperPersistence) {
-    return sanitizeObject(snake2camel(category));
+    const parsed = sanitizeObject(snake2camel(category));
+    return Object.keys(parsed).length ? parsed : undefined;
   }
 
   private getCategories(queryResult: IResult<ICategoryMapperPersistence>) {
