@@ -1,4 +1,7 @@
 import { transactionController } from '@controllers/transaction';
+import { bodyValidator } from '@middlewares/body-validator';
+import { paramValidator } from '@middlewares/param-validator';
+import { queryValidator } from '@middlewares/query-validator';
 import {
   createTransactionBodySchema,
   findTransactionsQuerySchema,
@@ -6,32 +9,31 @@ import {
   updateTransactionBodySchema,
 } from '@validators/transaction';
 import { Router } from 'express';
-import { validate } from 'middleware/validators';
 
 const router = Router();
 
 router.get(
   '/',
-  validate.query(findTransactionsQuerySchema),
+  queryValidator(findTransactionsQuerySchema),
   transactionController.index
 );
 
 router.post(
   '/',
-  validate.body(createTransactionBodySchema),
+  bodyValidator(createTransactionBodySchema),
   transactionController.store
 );
 
 router.put(
   '/:transactionId',
-  validate.param(transactionIdParamsSchema),
-  validate.body(updateTransactionBodySchema),
+  paramValidator(transactionIdParamsSchema),
+  bodyValidator(updateTransactionBodySchema),
   transactionController.update
 );
 
 router.delete(
   '/:transactionId',
-  validate.param(transactionIdParamsSchema),
+  paramValidator(transactionIdParamsSchema),
   transactionController.delete
 );
 

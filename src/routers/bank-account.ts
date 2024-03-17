@@ -1,11 +1,12 @@
 import { bankAccountController } from '@controllers/bank-account';
+import { bodyValidator } from '@middlewares/body-validator';
+import { paramValidator } from '@middlewares/param-validator';
 import {
   bankAccountIdParamsSchema,
   createBankAccountBodySchema,
   updateBankAccountBodySchema,
 } from '@validators/bank-account';
 import { Router } from 'express';
-import { validate } from 'middleware/validators';
 
 const router = Router();
 
@@ -13,26 +14,26 @@ router.get('/', bankAccountController.index);
 
 router.get(
   '/:bankAccountId',
-  validate.param(bankAccountIdParamsSchema),
+  paramValidator(bankAccountIdParamsSchema),
   bankAccountController.show
 );
 
 router.post(
   '/',
-  validate.body(createBankAccountBodySchema),
+  bodyValidator(createBankAccountBodySchema),
   bankAccountController.store
 );
 
 router.put(
   '/:bankAccountId',
-  validate.param(bankAccountIdParamsSchema),
-  validate.body(updateBankAccountBodySchema),
+  paramValidator(bankAccountIdParamsSchema),
+  bodyValidator(updateBankAccountBodySchema),
   bankAccountController.update
 );
 
 router.delete(
   '/:bankAccountId',
-  validate.param(bankAccountIdParamsSchema),
+  paramValidator(bankAccountIdParamsSchema),
   bankAccountController.delete
 );
 
