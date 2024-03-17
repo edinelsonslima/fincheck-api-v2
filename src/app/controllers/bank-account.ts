@@ -20,87 +20,62 @@ class BankAccountController {
   }
 
   public async index(req: IRequest, res: IResponse<IBankAccount[]>) {
-    try {
-      const bankAccounts = await this.bankAccountService.findAllByUserId(
-        req.userId
-      );
+    const bankAccounts = await this.bankAccountService.findAllByUserId(
+      req.userId
+    );
 
-      return res.status(200).json(bankAccounts);
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(500).json({ message: err.message });
-    }
+    return res.status(200).json(bankAccounts);
   }
 
   public async store(
     req: IRequest<ICreateBankAccountBody>,
     res: IResponse<IBankAccount>
   ) {
-    try {
-      const bankAccount = await this.bankAccountService.create(
-        req.userId,
-        req.body
-      );
+    const bankAccount = await this.bankAccountService.create(
+      req.userId,
+      req.body
+    );
 
-      return res.status(201).json(bankAccount);
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(500).json({ message: err.message });
-    }
+    return res.status(201).json(bankAccount);
   }
 
   public async show(
     req: IRequest<unknown, IBankAccountIdParams>,
     res: IResponse<IBankAccount>
   ) {
-    try {
-      const bankAccount =
-        await this.bankAccountService.findOneByUserIdAndBankAccountId(
-          req.userId,
-          req.params.bankAccountId
-        );
+    const bankAccount =
+      await this.bankAccountService.findOneByUserIdAndBankAccountId(
+        req.userId,
+        req.params.bankAccountId
+      );
 
-      return res.status(200).json(bankAccount);
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(500).json({ message: err.message });
-    }
+    return res.status(200).json(bankAccount);
   }
 
   public async update(
     req: IRequest<IUpdateBankAccountBody, IBankAccountIdParams>,
     res: IResponse<IBankAccount>
   ) {
-    try {
-      const bankAccount =
-        await this.bankAccountService.updateByUserIdAndBankAccountId(
-          req.userId,
-          req.params.bankAccountId,
-          req.body
-        );
+    const bankAccount =
+      await this.bankAccountService.updateByUserIdAndBankAccountId(
+        req.userId,
+        req.params.bankAccountId,
+        req.body
+      );
 
-      return res.status(200).json(bankAccount);
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(500).json({ message: err.message });
-    }
+    return res.status(200).json(bankAccount);
   }
 
   public async delete(
     req: IRequest<unknown, IBankAccountIdParams>,
     res: IResponse<void>
   ) {
-    try {
-      await this.bankAccountService.deleteByUserIdAndBankAccountId(
-        req.userId,
-        req.params.bankAccountId
-      );
+    await this.bankAccountService.deleteByUserIdAndBankAccountId(
+      req.userId,
+      req.params.bankAccountId
+    );
 
-      return res.status(204).send();
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(500).json({ message: err.message });
-    }
+    return res.status(204).send();
   }
 }
 

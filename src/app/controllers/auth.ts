@@ -12,28 +12,16 @@ class AuthController {
     req: IRequest<ISigninBodySchema>,
     res: IResponse<{ accessToken: string }>
   ) {
-    try {
-      const accessToken = await this.authService.signin(req.body);
-
-      return res.status(201).json({ accessToken });
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(401).json({ message: err.message });
-    }
+    const accessToken = await this.authService.signin(req.body);
+    return res.status(201).json({ accessToken });
   }
 
   public async signup(
     req: IRequest<ISignupBodySchema>,
     res: IResponse<{ accessToken: string }>
   ) {
-    try {
-      const { accessToken } = await this.authService.signup(req.body);
-
-      return res.status(201).json({ accessToken });
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(400).json({ message: err.message });
-    }
+    const { accessToken } = await this.authService.signup(req.body);
+    return res.status(201).json({ accessToken });
   }
 }
 

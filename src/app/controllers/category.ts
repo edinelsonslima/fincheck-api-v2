@@ -8,14 +8,8 @@ class CategoryController {
   }
 
   public async index(req: IRequest, res: IResponse<ICategory[]>) {
-    try {
-      const categories = await this.categoryService.findAllByUserId(req.userId);
-
-      return res.status(200).json(categories);
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(500).json({ message: err.message });
-    }
+    const categories = await this.categoryService.findAllByUserId(req.userId);
+    return res.status(200).json(categories);
   }
 }
 

@@ -8,14 +8,8 @@ class UserController {
   }
 
   public async show(req: IRequest, res: IResponse<IUser>) {
-    try {
-      const user = await this.userService.getUserById(req.userId);
-
-      return res.status(200).json(user);
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(500).json({ message: err.message });
-    }
+    const user = await this.userService.getUserById(req.userId);
+    return res.status(200).json(user);
   }
 }
 

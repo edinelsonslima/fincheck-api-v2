@@ -20,69 +20,45 @@ class TransactionController {
     req: IRequest<unknown, unknown, IFindTransactionsQuery>,
     res: IResponse<ITransaction[]>
   ) {
-    try {
-      const transactions = await this.transactionService.findAllByUserId(
-        req.userId,
-        req.query
-      );
+    const transactions = await this.transactionService.findAllByUserId(
+      req.userId,
+      req.query
+    );
 
-      return res.status(200).json(transactions);
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(500).json({ message: err.message });
-    }
+    return res.status(200).json(transactions);
   }
 
   public async store(
     req: IRequest<ICreateTransactionBody>,
     res: IResponse<ITransaction>
   ) {
-    try {
-      const transaction = await this.transactionService.create(
-        req.userId,
-        req.body
-      );
+    const transaction = await this.transactionService.create(
+      req.userId,
+      req.body
+    );
 
-      return res.status(201).json(transaction);
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(500).json({ message: err.message });
-    }
+    return res.status(201).json(transaction);
   }
 
   public async update(
     req: IRequest<IUpdateTransactionBody, ITransactionIdParam>,
     res: IResponse<ITransaction>
   ) {
-    try {
-      const transaction = await this.transactionService.update(
-        req.userId,
-        req.params.transactionId,
-        req.body
-      );
+    const transaction = await this.transactionService.update(
+      req.userId,
+      req.params.transactionId,
+      req.body
+    );
 
-      return res.status(200).json(transaction);
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(500).json({ message: err.message });
-    }
+    return res.status(200).json(transaction);
   }
 
   public async delete(
     req: IRequest<unknown, ITransactionIdParam>,
     res: IResponse<void>
   ) {
-    try {
-      await this.transactionService.delete(
-        req.userId,
-        req.params.transactionId
-      );
-
-      return res.status(204).send();
-    } catch (error: any) {
-      const err: Error = error;
-      return res.status(500).json({ message: err.message });
-    }
+    await this.transactionService.delete(req.userId, req.params.transactionId);
+    return res.status(204).send();
   }
 }
 
