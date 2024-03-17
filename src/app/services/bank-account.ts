@@ -32,12 +32,11 @@ class BankAccountService {
     userId: string,
     { color, initialBalance, name, type }: ICreateBankAccountBody
   ) {
-    return this.bankAccountRepository.create({
+    return this.bankAccountRepository.create(userId, {
       color,
       initialBalance,
       name,
       type,
-      userId,
     });
   }
 
