@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import 'express-async-errors';
 
-import { enStatusCodes } from '@enums/status-code';
+import { enStatusCode } from '@enums/status-code';
 import { IRequest, IResponse } from '@interfaces/express';
 import cors from 'cors';
 import { DomainError } from 'errors/domain';
@@ -21,7 +21,7 @@ app.use((error: any, req: IRequest, res: IResponse, next: NextFunction) => {
   if (!(error instanceof DomainError)) {
     console.error(error);
     return res
-      .status(enStatusCodes.INTERNAL_SERVER_ERROR)
+      .status(enStatusCode.INTERNAL_SERVER_ERROR)
       .json({ message: 'internal server error' });
   }
 
