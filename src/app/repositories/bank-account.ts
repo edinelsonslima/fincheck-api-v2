@@ -27,10 +27,8 @@ class BankAccountRepository {
     return this.mapper.toArray(result);
   }
 
-  public async create(
-    userId: string,
-    { color, initialBalance, name, type }: ICreateBankAccountBody
-  ) {
+  public async create(userId: string, data: ICreateBankAccountBody) {
+    const { color, initialBalance, name, type } = data;
     const result = await this.db.query<IBankAccountMapperPersistence>`
       INSERT INTO bank_accounts (name, initial_balance, type, color, user_id)
       OUTPUT INSERTED.*
@@ -55,8 +53,9 @@ class BankAccountRepository {
   public async updateByUserIdAndBankAccountId(
     userId: string,
     bankAccountId: string,
-    { color, initialBalance, name, type }: IUpdateBankAccountBody
+    data: IUpdateBankAccountBody
   ) {
+    const { color, initialBalance, name, type } = data;
     const result = await this.db.query<IBankAccountMapperPersistence>`
       UPDATE bank_accounts
       SET name = ISNULL(${name ?? null}, name),

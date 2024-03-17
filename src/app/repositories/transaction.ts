@@ -20,11 +20,10 @@ class TransactionRepository {
     private readonly mapper: ITransactionMapper
   ) {}
 
-  public async findAllByUserId(
-    userId: string,
-    { month, year, bankAccountId, type }: IFindTransactionsQuery
-  ) {
-    month += 1;
+  public async findAllByUserId(userId: string, data: IFindTransactionsQuery) {
+    const { month: monthIndex, year, bankAccountId, type } = data;
+    const month = monthIndex + 1;
+
     const result = await this.db
       .query<ITransactionsJoinBankAccountsAndCategories>`
       SELECT * FROM transactions
@@ -40,17 +39,8 @@ class TransactionRepository {
     return this.mapper.toArray(result);
   }
 
-  public async create(
-    userId: string,
-    {
-      name,
-      type,
-      bankAccountId,
-      categoryId,
-      date,
-      value,
-    }: ICreateTransactionBody
-  ) {
+  public async create(userId: string, data: ICreateTransactionBody) {
+    const { name, type, bankAccountId, categoryId, date, value } = data;
     const result = await this.db.query<ITransactionMapperPersistence>`
       INSERT INTO transactions (name, type, bank_account_id, category_id, date, value, user_id)
       OUTPUT INSERTED.*
@@ -63,15 +53,9 @@ class TransactionRepository {
   public async update(
     userId: string,
     transactionId: string,
-    {
-      name,
-      type,
-      bankAccountId,
-      categoryId,
-      date,
-      value,
-    }: IUpdateTransactionBody
+    data: IUpdateTransactionBody
   ) {
+    const { name, type, bankAccountId, categoryId, date, value } = data;
     const result = await this.db.query<ITransactionMapperPersistence>`
       UPDATE transactions
       SET name = ISNULL(${name ?? null}, name),
