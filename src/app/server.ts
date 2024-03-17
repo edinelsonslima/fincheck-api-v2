@@ -28,7 +28,7 @@ app.use((error: any, req: IRequest, res: IResponse, next: NextFunction) => {
   const { code, message, data } = error.toJSON();
   return res
     .status(code)
-    .json({ message, ...(Object.keys(data).length && data) });
+    .json({ message, ...(Object.keys(data).length && { data }) });
 });
 
 app.listen(env.PORT, () => {
