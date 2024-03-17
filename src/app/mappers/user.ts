@@ -1,4 +1,6 @@
-import { IUserMapperDomain, IUserMapperPersistence } from '@interfaces/user';
+import { sanitizeObject } from '@helpers/sanitize-object';
+import { snake2camel } from '@helpers/snake-to-camel';
+import { IUser, IUserMapperPersistence } from '@interfaces/user';
 import { IResult } from 'mssql';
 
 class UserMapper {
@@ -23,30 +25,16 @@ class UserMapper {
     return users;
   }
 
+  public toDomain(user: IUserMapperPersistence) {
+    return sanitizeObject(snake2camel(user)) as unknown as IUser;
+  }
+
   private getUsers(queryResult: IResult<IUserMapperPersistence>) {
     if (!queryResult.recordset?.length) {
       return undefined;
     }
 
     return queryResult.recordset.map(this.toDomain);
-  }
-
-  private toDomain(user: IUserMapperPersistence) {
-    return this.sanitizeObject<IUserMapperDomain>({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      password: user.password,
-      createdAt: new Date(user.created_at),
-      updatedAt: new Date(user.updated_at),
-    });
-  }
-
-  private sanitizeObject<T extends object>(obj: T) {
-    const invalid = ['', 'undefined', 'null', 'Invalid Date', 'NaN'];
-    const entries = Object.entries(obj);
-    const cleared = entries.filter(([, v]) => !invalid.includes(String(v)));
-    return Object.fromEntries(cleared) as T;
   }
 }
 

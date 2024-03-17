@@ -1,8 +1,6 @@
-import { enTransactionType } from '@enums/transaction';
-import {
-  ICategoryMapperDomain,
-  ICategoryMapperPersistence,
-} from '@interfaces/category';
+import { sanitizeObject } from '@helpers/sanitize-object';
+import { snake2camel } from '@helpers/snake-to-camel';
+import { ICategoryMapperPersistence } from '@interfaces/category';
 import { IResult } from 'mssql';
 
 class CategoryMapper {
@@ -27,31 +25,16 @@ class CategoryMapper {
     return categories;
   }
 
+  public toDomain(category: ICategoryMapperPersistence) {
+    return sanitizeObject(snake2camel(category));
+  }
+
   private getCategories(queryResult: IResult<ICategoryMapperPersistence>) {
     if (!queryResult.recordset?.length) {
       return undefined;
     }
 
     return queryResult.recordset.map(this.toDomain);
-  }
-
-  private toDomain(category: ICategoryMapperPersistence) {
-    return this.sanitizeObject<ICategoryMapperDomain>({
-      id: category.id,
-      userId: category.user_id,
-      name: category.name,
-      icon: category.icon,
-      type: category.type as enTransactionType,
-      createdAt: new Date(category.created_at),
-      updatedAt: new Date(category.updated_at),
-    });
-  }
-
-  private sanitizeObject<T extends object>(obj: T) {
-    const invalid = ['', 'undefined', 'null', 'Invalid Date', 'NaN'];
-    const entries = Object.entries(obj);
-    const cleared = entries.filter(([, v]) => !invalid.includes(String(v)));
-    return Object.fromEntries(cleared) as T;
   }
 }
 
