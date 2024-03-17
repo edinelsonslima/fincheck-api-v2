@@ -6,6 +6,17 @@ import {
 import { z } from 'zod';
 import { ITransaction } from './transaction';
 
+export interface IBankAccountMapperPersistence {
+  id: string;
+  user_id: string;
+  initial_balance: number;
+  name: string;
+  color: string;
+  type: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface IBankAccount {
   id: string;
   userId: string;
@@ -13,27 +24,8 @@ export interface IBankAccount {
   name: string;
   color: string;
   type: enBankAccountType;
-
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface IBankAccountMapperPersistence {
-  id: string[] | string;
-  user_id: string[] | string;
-  initial_balance: number;
-  name: string[] | string;
-  color: string;
-  type: string[] | string;
-  created_at: string[] | string;
-  updated_at: string[] | string;
-  category_id: string;
-  bank_account_id: string;
-  value: number[] | number;
-  date: string;
-}
-
-export interface IBankAccountMapperDomain extends IBankAccount {
   transactions: ITransaction[];
 }
 

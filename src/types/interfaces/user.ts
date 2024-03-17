@@ -1,12 +1,3 @@
-export interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export interface IUserMapperPersistence {
   id: string;
   name: string;
@@ -16,4 +7,11 @@ export interface IUserMapperPersistence {
   updated_at: Date;
 }
 
-export interface IUserMapperDomain extends IUser {}
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
